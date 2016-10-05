@@ -7,3 +7,6 @@
   1. Finally do a `git push -f`
 
 ## Info and important resources
+1. Installing mongodb: [Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/), [OS X](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/), [Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
+2. Accesing data with mongodb: [Link](https://spring.io/guides/gs/accessing-data-mongodb/)
+3. Project example running with Thymeleaf: [Link](http://krams915.blogspot.com.es/2012/12/spring-and-thymeleaf-with-javaconfig_2.html)

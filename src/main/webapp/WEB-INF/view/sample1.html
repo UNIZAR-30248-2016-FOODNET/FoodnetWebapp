@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../resources/css/style.css"/>
+    <title>Title</title>
+</head>
+
+<body>
+<div>
+    <table class="box-table-a">
+        <caption>Site Users</caption>
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Username</th>
+            <th scope="col">Role</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>George</td>
+            <td>Washington</td>
+            <td>gwash</td>
+            <td>admin</td>
+            <td><a href="#">del</a> | <a href="#">edit</a></td>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>John</td>
+            <td>Adams</td>
+            <td>jadam</td>
+            <td>user</td>
+            <td><a href="#">del</a> | <a href="#">edit</a></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Thomas</td>
+            <td>Jefferson</td>
+            <td>tjeff</td>
+            <td>user</td>
+            <td><a href="#">del</a> | <a href="#">edit</a></td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>James</td>
+            <td>Madison</td>
+            <td>jmadi</td>
+            <td>admin</td>
+            <td><a href="#">del</a> | <a href="#">edit</a></td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>James</td>
+            <td>Monroe</td>
+            <td>jmonr</td>
+            <td>admin</td>
+            <td><a href="#">del</a> | <a href="#">edit</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form action="#" method="post">
+        <table class="box-table-a">
+            <caption>New User</caption>
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="text" hidden="hidden"/>
+                    <input type="text"/></td>
+                <td><input type="text"/></td>
+                <td><input type="text"/></td>
+                <td><select>
+                    <option value="1">Access Type 1</option>
+                    <option value="2">Access Type 2</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit">Action</button>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+</body>
+</html>
