@@ -1,9 +1,9 @@
 Curso 2016-2017 | Equipo 1 |  |  |  |
 ----------------|----------|----------|----------|----------|
-|| Francisco Menendez Moya | Mario Navarro Claras | Persona 3 | Persona 4 |
+|| Francisco Menendez Moya | Mario Navarro Claras | Pablo Viñuales Sánchez | Persona 4 |
 19-SEP al 14-OCT | | | | |
-Horas trabajadas | 13,5 | 3,5 | | |
-Descripción trabajo | Plan de producto, lanzamiento del producto, configuración de Github y Dropbox y configuración del proyecto de Spring. Proyecto base con Spring y Thymeleaf. Reuniones.| Plan de producto e informe de lanzamiento. Configuración del proyecto de Spring. Ingregración de Travis CI. | | |
+Horas trabajadas | 13,5 | 8,5 | 7,5 | |
+Descripción trabajo | Plan de producto, lanzamiento del producto, configuración de Github y Dropbox y configuración del proyecto de Spring. Proyecto base con Spring y Thymeleaf. Reuniones.| Plan de producto e informe de lanzamiento. Configuración del proyecto de Spring. Ingregración de Travis CI. | Plan de producto e informe de lanzamiento. Reuniones.| |
 17-OCT al 11-NOV | | | | |
 Horas trabajadas | | | | |
 Descripción trabajo | | | | |
