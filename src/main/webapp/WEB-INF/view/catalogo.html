@@ -20,46 +20,41 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="col-sm-6 col-md-4" th:each="producto : ${listaProductos}">
+                <div class="col-sm-6 col-md-4 col-lg-3" th:each="producto : ${listaProductos}">
                     <div class="thumbnail">
-                        <h4 class="text-center"><span class="label label-info" th:text="${producto.categoria}">Categoria Producto</span></h4>
-                        <img src="http://placehold.it/650x450'}" th:src="${producto.imagen}" class="img-responsive"/>
-                        <div class="caption">
-                            <div class="row">
-                                <div class="col-md-6 col-xs-6">
-                                    <h3 th:text="${producto.nombre}">Nombre producto</h3>
-                                </div>
-                                <div class="col-md-6 col-xs-6 price">
-                                    <h3>
-                                        <label th:text="${producto.precio}">$123.45</label>
-                                    </h3>
-                                </div>
-                            </div>
-                            <p th:text="${#strings.abbreviate(producto.descripcion,128)}">Descripcion breve producto</p>
-                            <div class="row">
+                        <h4 class="text-center"><span class="label label-info" th:text="${producto.getCategoria()}">Categoría Producto</span></h4>
+                        <img src="http://placehold.it/650x450" th:src="${producto.getImagen()}" class="img-responsive"/>
+                        <div class="caption" style="text-align: center">
+                            <h4 th:text="${producto.getNombre()}">Nombre producto</h4>
+                            <h4>
+                                <label th:text="${producto.getPrecio()}">$123.45</label>
+                            </h4>
+                            <!--<p th:text="${#strings.abbreviate(producto.getDescripcion(),128)}">Descripcion breve producto</p>-->
+                            <!--<div class="row">
                                 <div class="col-md-6">
                                     <a class="btn btn-primary btn-product"><span class="glyphicon glyphicon-thumbs-up"></span> Like</a>
                                 </div>
                                 <div class="col-md-6">
-                                    <a href="#" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span> Buy</a></div>
-                            </div>
+                                    <a href="#" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span>Buy</a>
+                                </div>
+                            </div>-->
 
                             <p> </p>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-4">
+                <!--<div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="thumbnail" >
                         <h4 class="text-center"><span class="label label-info">Apple</span></h4>
                         <img src="http://placehold.it/650x450&text=iPhone 6" class="img-responsive">
                         <div class="caption">
                             <div class="row">
-                                <div class="col-md-6 col-xs-6">
-                                    <h3>iPhone 6</h3>
+                                <div class="col-md-8 col-xs-8">
                                 </div>
-                                <div class="col-md-6 col-xs-6 price">
-                                    <h3>
-                                        <label>$749.99</label></h3>
+                                <div class="col-md-4 col-xs-4 price">
+                                    <h5>
+                                        <label>$749.99</label>
+                                    </h5>
                                 </div>
                             </div>
                             <p>32GB, 64Bit, 1080HD, 4.7 inches, iOS 8</p>
@@ -68,14 +63,15 @@
                                     <a class="btn btn-primary btn-product"><span class="glyphicon glyphicon-thumbs-up"></span> Like</a>
                                 </div>
                                 <div class="col-md-6">
-                                    <a href="#" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span> Buy</a></div>
+                                    <a href="#" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span> Buy</a>
+                                </div>
                             </div>
 
                             <p> </p>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-4">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="thumbnail" >
                         <h4 class="text-center"><span class="label label-info">Nokia</span></h4>
                         <img src="http://placehold.it/650x450&text=Lumia 1520" class="img-responsive">
@@ -102,6 +98,33 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="thumbnail" >
+                        <h4 class="text-center"><span class="label label-info">Nokia</span></h4>
+                        <img src="http://placehold.it/650x450&text=Lumia 1520" class="img-responsive">
+                        <div class="caption">
+                            <div class="row">
+                                <div class="col-md-6 col-xs-6">
+                                    <h3>Lumia 1520</h3>
+                                </div>
+                                <div class="col-md-6 col-xs-6 price">
+                                    <h3>
+                                        <label>$749.00</label></h3>
+                                </div>
+                            </div>
+                            <p>32GB, 4GB Ram, 1080HD, 6.3 inches, WP 8</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a class="btn btn-primary btn-product"><span class="glyphicon glyphicon-thumbs-up"></span> Like</a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="#" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span> Buy</a></div>
+                            </div>
+
+                            <p> </p>
+                        </div>
+                    </div>
+                </div>-->
 
             </div>
 
