@@ -1,13 +1,12 @@
 package es.unizar.es.foodnet.controller;
 
-import es.unizar.es.foodnet.model.entity.Product;
-import es.unizar.es.foodnet.model.repository.ProductRepository;
+import es.unizar.es.foodnet.model.entity.Producto;
+import es.unizar.es.foodnet.model.repository.RepositorioProducto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.thymeleaf.context.WebContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,7 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    private ProductRepository repository;
+    private RepositorioProducto repository;
 
     @RequestMapping("/")
     public String root(){
@@ -40,29 +39,29 @@ public class HomeController {
                           ServletContext servletContext){
         System.out.println("Detectada peticion para ir a sample2");
 
-        Product p1 = new Product("Chope","Alcampo");
-        Product p2 = new Product("Salchipapa","Carrefour");
-        List<Product> products = repository.findAll();
+        //Producto p1 = new Producto("Chope","Alcampo");
+        //Producto p2 = new Producto("Salchipapa","Carrefour");
+        List<Producto> productos = repository.findAll();
 
         //WebContext ctx = new WebContext(request, response, servletContext);
-        //ctx.setVariable("listica", products);
+        //ctx.setVariable("listica", productos);
         //ctx.setVariable("producttype","new");
 
-        model.addAttribute("listica", products);
+        model.addAttribute("listica", productos);
         model.addAttribute("producttype","new");
-        model.addAttribute("productObject",new Product());
+        model.addAttribute("productObject",new Producto());
 
         return "sample2";
     }
 
     @RequestMapping(value="/products/create", produces="application/json", method= RequestMethod.POST)
-    public String create(Product product) {
+    public String create(Producto producto) {
 
-        System.out.println("Petition to add product");
-        System.out.println("Product name: " + product.getName());
-        System.out.println("Product brand: " + product.getBrand());
+        System.out.println("Petition to add producto");
+        System.out.println("Producto name: " + producto.getNombre());
+        System.out.println("Producto brand: " + producto.getSupermercado().getNombre());
 
-        repository.save(product);
+        repository.save(producto);
         return "redirect:/sample2";
     }
 

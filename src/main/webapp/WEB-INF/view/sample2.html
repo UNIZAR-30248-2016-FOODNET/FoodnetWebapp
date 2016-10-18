@@ -59,13 +59,13 @@
         </tbody>
     </table>
 
-    <form action="#" th:action="@{/products/create}" th:object="${productObject}" method="post">
+    <form action="#" th:action="@{/productos/create}" th:object="${productObject}" method="post">
         <table class="box-table-a">
             <caption th:text="#{${producttype + '.user.table.caption'}}">New User</caption>
             <thead>
             <tr>
-                <th th:text="#{product.name.label}">Name</th>
-                <th th:text="#{product.brand.label}">Brand</th>
+                <th th:text="#{producto.name.label}">Name</th>
+                <th th:text="#{producto.brand.label}">Brand</th>
             </tr>
             </thead>
             <tbody>
