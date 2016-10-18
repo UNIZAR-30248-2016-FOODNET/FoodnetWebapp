@@ -77,4 +77,5 @@ public class Producto {
                 id, nombre, supermercado.getNombre(), precio, categoria
                         .getNombre());
     }
+
 }
