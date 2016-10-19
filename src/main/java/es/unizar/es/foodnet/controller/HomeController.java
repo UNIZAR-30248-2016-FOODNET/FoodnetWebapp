@@ -26,15 +26,8 @@ public class HomeController {
         return "index";
     }
 
-    @RequestMapping("/sample1")
-    public String sample1(){
-        System.out.println("Detectada peticion para ir a sample1");
-        return "sample1";
-    }
-
     @RequestMapping("/sample2")
-    public String sample2(Model model, HttpServletRequest request, HttpServletResponse response,
-                          ServletContext servletContext){
+    public String sample2(Model model){
         System.out.println("Detectada peticion para ir a sample2");
 
         //Producto p1 = new Producto("Chope","Alcampo");

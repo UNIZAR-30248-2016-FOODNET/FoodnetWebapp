@@ -31,6 +31,9 @@ public class ThymeleafConfig {
     public ThymeleafViewResolver thymeleafViewResolver() {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(templateEngine());
+
+        //Necesario para preveer fallos de codificacion en los html, como simbolos, acentos, etc.
+        resolver.setCharacterEncoding("UTF-8");
         return resolver;
     }
 
