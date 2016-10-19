@@ -15,13 +15,13 @@ import java.util.List;
 
 
 @Controller
-public class HomeController {
+public class ControladorHome {
 
     @Autowired
     private RepositorioProducto repository;
 
     @RequestMapping("/")
-    public String root(){
+    public String home(){
         System.out.println("Detectada peticion para ir a /");
         return "index";
     }

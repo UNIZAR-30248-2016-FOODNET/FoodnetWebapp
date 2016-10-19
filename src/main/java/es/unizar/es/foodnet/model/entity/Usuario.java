@@ -1,12 +1,14 @@
 package es.unizar.es.foodnet.model.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 public class Usuario {
     @Id
     private String id;
     private String nombre;
     private String apellidos;
+    @Indexed(unique = true)
     private String email;
     private String password;
     private String direccion;

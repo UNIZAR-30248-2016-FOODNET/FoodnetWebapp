@@ -32,7 +32,7 @@ public class FoodNetApplication implements CommandLineRunner {
      */
 	@Override
 	public void run(String... args) throws Exception {
-
+		/*
 		// Delete all the content
 		repositorioProducto.deleteAll();
 		repositorioCategoria.deleteAll();
@@ -63,9 +63,8 @@ public class FoodNetApplication implements CommandLineRunner {
 		System.out.println("Producto found with findByName('Yogurt'):");
 		System.out.println("---------------------------------------");
 		System.out.println(repositorioProducto.findByNombre("Yogurt"));
-		System.out.println();
-/*
-		System.out.println("Customers found with findBySupermarket('Mercadona'):");
+		System.out.println();*/
+		/*System.out.println("Customers found with findBySupermarket('Mercadona'):");
 		System.out.println("----------------------------------------------");
 		productRepository.findBySupermarket("Mercadona").forEach(System.out::println);
 		System.out.println();
