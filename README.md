@@ -10,7 +10,7 @@
   1. If you have the issue: `Unable to create/open lock file: /data/db/mongod.lock errno:13`
   2. Create the folder to store data: `sudo mkdir -p /data/db`
   3. Configure the folder in MongoDB: `mongod --dbpath /data/db`
-  4. Give permissons to access: `sudo chown -R `id -u` /data/db`
+  4. Give permissons to access: `sudo chown -R ``id -u`` /data/db`
   
 ## Info and important resources
 1. Installing mongodb: [Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/), [OS X](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/), [Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
