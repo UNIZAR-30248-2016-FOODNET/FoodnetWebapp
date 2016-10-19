@@ -9,17 +9,16 @@ public class Producto {
     @DBRef
     private Categoria categoria;
     @DBRef
-    Supermercado supermercado;
-
+    private Supermercado supermercado;
     private String nombre;
     private double precio;
     private String imagen;
-
-    //TODO: añadir campo descripcion cuando sea necesario
+    private String descripcion;
 
     //Mandatory in spite of being useless
     public Producto() {}
 
+    //TODO: añadir campo descripcion al constructor cuando sea necesario
     public Producto(Categoria categoria, Supermercado supermercado, String nombre,
                     double precio, String imagen) {
         this.categoria = categoria;
@@ -69,13 +68,19 @@ public class Producto {
         this.imagen = imagen;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     @Override
     public String toString() {
         return String.format(
                 "Producto[id=%s, name='%s', supermarket='%s', price='%s', " +
                         "category='%s']",
-                id, nombre, supermercado.getNombre(), precio, categoria
-                        .getNombre());
+                id, nombre, supermercado.getNombre(), precio, categoria.getNombre());
     }
-
 }
