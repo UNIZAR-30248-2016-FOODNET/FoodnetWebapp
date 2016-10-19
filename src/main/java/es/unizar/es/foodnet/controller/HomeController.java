@@ -13,9 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-/**
- * Created by Fran Menendez Moya on 5/10/16.
- */
+
 @Controller
 public class HomeController {
 
