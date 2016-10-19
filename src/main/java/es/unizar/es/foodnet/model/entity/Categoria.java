@@ -3,10 +3,8 @@ package es.unizar.es.foodnet.model.entity;
 import org.springframework.data.annotation.Id;
 
 public class Categoria {
-
     @Id
     private String id;
-
     private String nombre;
 
     //Mandatory in spite of being useless

@@ -33,6 +33,7 @@ public class FoodNetApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
+		// Delete all the content
 		repositorioProducto.deleteAll();
 		repositorioCategoria.deleteAll();
 		repositorioSupermercado.deleteAll();
@@ -45,7 +46,7 @@ public class FoodNetApplication implements CommandLineRunner {
 		Categoria lacteo = repositorioCategoria.findByNombre("Lacteos");
 		Supermercado mercadona = repositorioSupermercado.findByNombre("Mercadona");
 
-		// Save 5 product and assign its category
+		// Store 5 products
 		repositorioProducto.save(new Producto(lacteo, mercadona, "Yogurt", 0.20, "http://placehold.it/650x450"));
 		repositorioProducto.save(new Producto(lacteo, mercadona, "Yogurt2", 3.80, "http://placehold.it/650x450"));
 		repositorioProducto.save(new Producto(lacteo, mercadona, "Yogurt3", 1.2, "http://placehold.it/650x450"));
@@ -74,5 +75,4 @@ public class FoodNetApplication implements CommandLineRunner {
 		productRepository.findByCategory("Lacteos").forEach(System.out::println);
 		*/
 	}
-
 }

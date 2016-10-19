@@ -2,14 +2,13 @@ package es.unizar.es.foodnet.model.repository;
 
 import es.unizar.es.foodnet.model.entity.Producto;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
 /**
- * Created by Fran Menendez Moya on 5/10/16.
+ * Repositorio encargado de realizar las operaciones CRUD sobre los productos
  */
-@Repository
 public interface RepositorioProducto extends MongoRepository<Producto,String> {
 
+    // Busca un producto a partir de su nombre
     Producto findByNombre(String nombre);
 
     //@Query( value="{ category.$name: ?0 }")
