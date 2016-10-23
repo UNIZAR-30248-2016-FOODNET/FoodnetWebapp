@@ -19,8 +19,6 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest
 public class FoodNetApplicationTests {
 
-
-
 	@Autowired
 	private RepositorioUsuario repositorioUsuario;
 	@Autowired
@@ -49,7 +47,7 @@ public class FoodNetApplicationTests {
 			Usuario usuario = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
 			cu.registrarUsuario(usuario);
 			HttpServletRequest hsr = new MockHttpServletRequest();
-			assertTrue(cu.autenticarUsuario("pepe@gmail.com","Zaragoza-1",hsr).equals("redirect:/catalogo"));
+			assertTrue(cu.autenticarUsuario("pepe@gmail.com","Zaragoza-1",hsr,null).equals("redirect:/"));
 			repositorioUsuario.delete(usuario);
 		}else{
 			assertTrue(false);

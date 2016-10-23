@@ -5,6 +5,7 @@ import es.unizar.es.foodnet.model.repository.RepositorioUsuario;
 import es.unizar.es.foodnet.model.service.Password;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +16,22 @@ import java.io.PrintWriter;
 @Controller
 public class ControladorUsuario {
 
+    private final RepositorioUsuario repoUsuario;
+
     @Autowired
-    private RepositorioUsuario repoUsuario;
+    public ControladorUsuario(RepositorioUsuario repoUsuario) {
+        this.repoUsuario = repoUsuario;
+    }
+
+    /**
+     * Devuelve la pagina de registro a quien la solicite
+     * @return pagina de registro
+     */
+    @RequestMapping(value="/panelLogin")
+    public String paginaRegistro(){
+        System.out.println("Detectada peticion para cargar la pagina de registro/log");
+        return "registro";
+    }
 
     /**
      * Obtiene un usuario del formulario html e intenta registrarlo
@@ -49,7 +64,8 @@ public class ControladorUsuario {
     @RequestMapping(value="/login", method = RequestMethod.POST)
     public String autenticarUsuario(@RequestParam("email") String email,
                                     @RequestParam("password") String password,
-                                    HttpServletRequest request){
+                                    HttpServletRequest request,
+                                    Model model){
         System.out.println("Detectada peticion para que el usuario " + email + " haga login");
 
         Password pw = new Password();
@@ -61,18 +77,19 @@ public class ControladorUsuario {
                 if(pw.isPasswordValid(password,user.getPassword())){
                     System.out.println("Password valida, redirigiendo a catalogo");
                     request.getSession().setAttribute("user", user);
-                    return "redirect:/catalogo";
+                    model.addAttribute("currentUser",user);
+                    return "redirect:/";
                 } else{
                     System.out.println("Password no valida");
-                    return "redirect:/";
+                    return "redirect:/panelLogin";
                 }
             } catch (Exception e) {
                 System.err.println("Error al comprobar la password del usuario " + user.getEmail());
-                return "redirect:/";
+                return "redirect:/panelLogin";
             }
         } else{
             System.err.println("Error al obtener el usuario cuyo email es " + email);
-            return "redirect:/";
+            return "redirect:/panelLogin";
         }
 
     }
