@@ -25,6 +25,18 @@
 	</properties>
 
 	<dependencies>
+		<!--
+			Dependencia para legacyhtml5 con thymeleaf
+		-->
+		<dependency>
+			<groupId>net.sourceforge.nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+			<version>1.9.22</version>
+		</dependency>
+
+		<!--
+			Dependencias por defecto de Spring
+		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>

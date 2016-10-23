@@ -10,16 +10,23 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 @Configuration
 public class ThymeleafConfig {
 
+    /**
+     * Provee la informacion necesaria para resolver los recursos del sistema como paginas HTML, especificando
+     * la ruta donde se van a encontrar, asi como extensiones para simplificar la labor de los controladores
+     */
     @Bean
     public ServletContextTemplateResolver templateResolver() {
         ServletContextTemplateResolver resolver = new ServletContextTemplateResolver();
         resolver.setPrefix("/WEB-INF/view/");
         resolver.setSuffix(".html");
-        resolver.setTemplateMode("HTML5");
+        resolver.setTemplateMode("LEGACYHTML5");
         resolver.setOrder(1);
         return resolver;
     }
 
+    /**
+     * Linkeamos a thymeleaf para que sea el resolver por defecto de spring
+     */
     @Bean
     public SpringTemplateEngine templateEngine() {
         SpringTemplateEngine engine = new SpringTemplateEngine();
@@ -27,6 +34,9 @@ public class ThymeleafConfig {
         return engine;
     }
 
+    /**
+     * Configuracion de thymeleaf como resolver
+     */
     @Bean
     public ThymeleafViewResolver thymeleafViewResolver() {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
