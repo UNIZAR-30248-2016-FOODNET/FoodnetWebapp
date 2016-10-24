@@ -75,8 +75,4 @@ public class Usuario {
                 ", direccion='" + direccion + '\'' +
                 '}';
     }
-    public boolean equals(Usuario u){
-        return id.equals(u.id) && nombre.equals(u.nombre) && apellidos.equals(u.apellidos) && email.equals(u.email)
-                && password.equals(u.password) && direccion.equals(u.direccion);
-    }
 }

@@ -120,4 +120,18 @@ public class ControladorUsuario {
             System.err.println("Error al obtener la salida del response del usuario");
         }
     }
+
+    /**
+     * Tratamiento para cuando se pide hacer un logout
+     * @param request request del usuario que hace la peticion
+     * @return redireccion a index invalidando la sesion
+     */
+    @RequestMapping(value="/logout")
+    public String logout(HttpServletRequest request){
+        System.out.println("Me ha llegado peticion para logout");
+
+        request.getSession().invalidate();
+
+        return "redirect:/";
+    }
 }
