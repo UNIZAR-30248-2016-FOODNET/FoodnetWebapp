@@ -2,7 +2,9 @@ package es.unizar.es.foodnet.model.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 public class Usuario {
     @Id
     private String id;

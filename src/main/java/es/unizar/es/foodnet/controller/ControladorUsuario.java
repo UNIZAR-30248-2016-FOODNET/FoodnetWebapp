@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @Controller
 public class ControladorUsuario {
@@ -47,7 +49,7 @@ public class ControladorUsuario {
         try {
             user.setPassword(pw.generatePassword(user.getPassword()));
             repoUsuario.save(user);
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             System.err.println("Error al generar password cifrada del usuario " + user.getEmail());
         }
 

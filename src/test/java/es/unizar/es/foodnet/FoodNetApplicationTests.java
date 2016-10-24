@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.ExtendedModelMap;
@@ -15,6 +16,7 @@ import org.springframework.ui.ExtendedModelMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -46,11 +48,24 @@ public class FoodNetApplicationTests {
 	 * Test para comprobar que se puede registrar correctamente a un usuario
 	 */
 	@Test
-	public void registrarUsuario(){
+	public void registrarUsuarioNuevo(){
 		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
 		cu.registrarUsuario(user);
 		Usuario usuario = repositorioUsuario.findByEmail("pepe@gmail.com");
 		assertNotNull(usuario);
+		assertNull(repositorioUsuario.findByEmail("noExisto@gmail.com"));
+
+	}
+
+	/**
+	 * Test para comprobar que no se puede registrar a un usuario con un email ya existente en el sistema
+	 */
+	@Test (expected = DuplicateKeyException.class)
+	public void registrarUsuarioExistente(){
+		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
+		cu.registrarUsuario(user);
+		Usuario u2 = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
+		cu.registrarUsuario(u2);
 	}
 
 	/**
