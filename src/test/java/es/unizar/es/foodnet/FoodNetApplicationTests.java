@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,10 +46,12 @@ public class FoodNetApplicationTests {
 	@Test
 	public void autenticarUsuario(){
 		if(repositorioUsuario.findByEmail("pepe@gmail.com")==null){
-			Usuario usuario = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
-			cu.registrarUsuario(usuario);
+			cu.registrarUsuario(new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza"));
+			Usuario usuario = repositorioUsuario.findByEmail("pepe@gmail.com");
 			HttpServletRequest hsr = new MockHttpServletRequest();
-			assertTrue(cu.autenticarUsuario("pepe@gmail.com","Zaragoza-1",hsr,null).equals("redirect:/"));
+			Model m = new ExtendedModelMap();
+			assertTrue(cu.autenticarUsuario("pepe@gmail.com","Zaragoza-1",hsr,m).equals("redirect:/"));
+			assertTrue(((Usuario)m.asMap().get("currentUser")).equals(usuario));
 			repositorioUsuario.delete(usuario);
 		}else{
 			assertTrue(false);
