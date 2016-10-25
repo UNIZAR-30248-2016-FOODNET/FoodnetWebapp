@@ -9,6 +9,7 @@
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../../resources/css/navbar.css" th:href="@{/resources/css/navbar.css}" />
+    <link rel="stylesheet" href="../../resources/css/cart.css" th:href="@{/resources/css/cart.css}" />
 </head>
 
 <nav class="navbar navbar-default navbar-static-top">
@@ -34,9 +35,6 @@
             <ul class="nav navbar-nav navbar-right">
                 <li th:if="${session.user==null}" class="changeActive">
                     <a href="/panelLogin">Regístrate/Accede</a>
-                </li>
-                <li th:if="${session.user!=null}" class="changeActive">
-                    <a href="#">Historial de pedidos</a>
                 </li>
                 <li class="dropdown" th:if="${session.user!=null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -76,6 +74,32 @@
                                     </div>
                                 </div>
                             </div>
+                        </li>
+                    </ul>
+                </li>
+                <li th:if="${session.user!=null}" class="changeActive">
+                    <a href="#">Historial de pedidos</a>
+                </li>
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <span class="glyphicon glyphicon-shopping-cart"></span> 7 - Items<span class="caret"></span></a>
+                    <ul class="dropdown-menu dropdown-cart" role="menu">
+                        <li>
+                                    <span class="item">
+                                        <span class="item-left">
+                                            <img src="http://placehold.it/50x50" alt="" />
+                                            <span class="item-info">
+                                                <span>Item name</span>
+                                                <span>23$</span>
+                                            </span>
+                                        </span>
+                                        <span class="item-right">
+                                            <button class="btn btn-xs btn-danger pull-right">x</button>
+                                        </span>
+                                    </span>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="/verCarro">Ver carro</a>
                         </li>
                     </ul>
                 </li>

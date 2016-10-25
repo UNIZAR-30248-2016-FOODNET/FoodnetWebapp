@@ -11,11 +11,11 @@
 </head>
 
 <body>
-    <!--<style type="text/css">
+    <style type="text/css">
         .btn-product{
-            width: 100%;
+            width: 90%;
         }
-    </style>-->
+    </style>
 
     <div th:include="navbar"></div>
 
@@ -31,16 +31,7 @@
                             <h4>
                                 <label th:text="${producto.getPrecio() + '€'}">€123.45</label>
                             </h4>
-                            <!--<p th:text="${#strings.abbreviate(producto.getDescripcion(),128)}">Descripcion breve producto</p>-->
-                            <!--<div class="row">
-                                <div class="col-md-6">
-                                    <a class="btn btn-primary btn-product"><span class="glyphicon glyphicon-thumbs-up"></span> Like</a>
-                                </div>
-                                <div class="col-md-6">
-                                    <a href="#" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span>Buy</a>
-                                </div>
-                            </div>-->
-
+                            <a href="#" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span>Añadir al carro</a>
                             <p> </p>
                         </div>
                     </div>
