@@ -136,4 +136,51 @@ public class ControladorUsuario {
 
         return "redirect:/";
     }
+
+    /**
+     * Obtiene los datos del usuario al cual modificar sus datos personales
+     * y lo cambia en la base de datos
+     * @param user usuario con sus campos a cambiar
+     * @return redireccion a index si es correcto o al panel de login si
+     * no se encuentra el usuario del que modificar datos
+     */
+    @RequestMapping(value="/modificarDatos", method = RequestMethod.POST)
+    public String modificarDatosUsuario(Usuario user){
+        System.out.println("Detectada peticion para modificar datos del usuario " + user.getEmail());
+        Usuario userRepo = repoUsuario.findById(user.getId());
+        if(userRepo != null) {
+            // Comprueba si ha cambiado la contraseña
+            Password pw = new Password();
+            try {
+                // La contraseña ha cambiado
+                if (!pw.isPasswordValid(userRepo.getPassword(), user.getPassword()))
+                    user.setPassword(pw.generatePassword(user.getPassword()));
+                repoUsuario.save(user);
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                System.err.println("Error al generar password cifrada del usuario " + user.getEmail());
+                return "redirect:/modificarDatosUsuario";
+            }
+        } else{
+            System.err.println("Error al intentar modificar los datos del usuario.");
+            return "redirect:/panelLogin";
+        }
+        return "redirect:/modificarDatosUsuario";
+    }
+
+    /**
+     * Elimina al usuario de la base de datos y redirige a la pagina principal
+     * @param user usuario a eliminar
+     * @return redireccion a la pagina de login/registro
+     */
+    @RequestMapping(value="/eliminarUsuario", method = RequestMethod.POST)
+    public String eliminarUsuario(Usuario user){
+        System.out.println("Detectada peticion para eliminar al usuario " + user.getEmail());
+        Usuario userRepo = repoUsuario.findById(user.getId());
+        if(userRepo != null) {
+            repoUsuario.delete(user);
+        } else{
+            System.err.println("Error al intentar eliminar al usuario.");
+        }
+        return "redirect:/panelLogin";
+    }
 }
