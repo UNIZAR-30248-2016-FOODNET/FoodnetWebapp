@@ -152,9 +152,16 @@ public class ControladorUsuario {
             // Comprueba si ha cambiado la contraseña
             Password pw = new Password();
             try {
-                // La contraseña ha cambiado
-                if (!pw.isPasswordValid(userRepo.getPassword(), user.getPassword()))
+                String password = user.getPassword();
+                if ((password != null) && !password.equals("")
+                        && !pw.isPasswordValid(password, userRepo.getPassword())) {
+                    // La contraseña ha cambiado
                     user.setPassword(pw.generatePassword(user.getPassword()));
+                } else if ((password == null) || password.equals("")) {
+                    // La contraseña no se quiere modificar
+                    user.setPassword(userRepo.getPassword());
+                }
+
                 repoUsuario.save(user);
             } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                 System.err.println("Error al generar password cifrada del usuario " + user.getEmail());
@@ -167,20 +174,20 @@ public class ControladorUsuario {
         return "redirect:/modificarDatosUsuario";
     }
 
+
     /**
      * Elimina al usuario de la base de datos y redirige a la pagina principal
-     * @param user usuario a eliminar
+     * @param request request del usuario que hace la peticion
      * @return redireccion a la pagina de login/registro
      */
-    @RequestMapping(value="/eliminarUsuario", method = RequestMethod.POST)
-    public String eliminarUsuario(Usuario user){
+    @RequestMapping(value="/eliminarUsuario")
+    public String eliminarUsuario(HttpServletRequest request){
+
+        Usuario user = (Usuario) request.getSession().getAttribute("user");
         System.out.println("Detectada peticion para eliminar al usuario " + user.getEmail());
-        Usuario userRepo = repoUsuario.findById(user.getId());
-        if(userRepo != null) {
-            repoUsuario.delete(user);
-        } else{
-            System.err.println("Error al intentar eliminar al usuario.");
-        }
-        return "redirect:/panelLogin";
+        request.getSession().invalidate();
+        repoUsuario.delete(user);
+
+        return "redirect:/";
     }
 }

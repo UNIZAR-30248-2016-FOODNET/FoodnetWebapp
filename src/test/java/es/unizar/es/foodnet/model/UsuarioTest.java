@@ -58,6 +58,7 @@ public class UsuarioTest {
 		cu.registrarUsuario(user);
 		Usuario usuario = repositorioUsuario.findByEmail("pepe@gmail.com");
 		assertNotNull(usuario);
+		assertNotNull(repositorioUsuario.findById(usuario.getId()));
 	}
 
     /**
@@ -128,10 +129,59 @@ public class UsuarioTest {
 
 	}
 
+	/**
+	 * Modifica los datos de un usuario existente y comprueba que los datos corresponden
+	 */
 	@Test
-	public void contextLoads() {
+	public void modificarDatosUsuario() {
+		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
+		cu.registrarUsuario(user);
+		user.setNombre("pepe2");
+		user.setApellidos("Sanchez2");
+		user.setDireccion("Zaragoza-2");
+		user.setEmail("pepe2@pepe2@gmail.com");
+		user.setPassword("zaragozaaaa");
+
+		cu.modificarDatosUsuario(user);
+
+		Usuario userRepo = repositorioUsuario.findById(user.getId());
+		assertEquals(user.getNombre(), userRepo.getNombre());
+		assertEquals(user.getApellidos(), userRepo.getApellidos());
+		assertEquals(user.getDireccion(), userRepo.getDireccion());
+		assertEquals(user.getEmail(), userRepo.getEmail());
+		assertEquals(user.getPassword(), userRepo.getPassword());
 	}
 
+	/**
+	 * Modifica los datos de un usuario con un email de otro usuario que existia
+	 * previamente y comprueba que se produce un error
+	 */
+	@Test (expected = DuplicateKeyException.class)
+	public void modificarEmailExistente() {
+		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
+		cu.registrarUsuario(user);
 
+		Usuario user2 = new Usuario("manolo", "Navarro", "manolo@gmail.com", "Zaragoza-2", "zaragoza");
+		cu.registrarUsuario(user2);
+		user2.setEmail("pepe@gmail.com");
+		cu.modificarDatosUsuario(user2);
+	}
+
+	/**
+	 * Modifica los datos de un usuario con una password igual a la cadena vacia
+	 * para comprobar que se conserva la antigua en caso de que el usuario no quiera
+	 * modificar su password actual
+	 */
+	@Test
+	public void NoModificarPassword() {
+		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
+		cu.registrarUsuario(user);
+		String passAntigua = repositorioUsuario.findById(user.getId()).getPassword();
+		user.setPassword("");
+		cu.modificarDatosUsuario(user);
+
+		String passActual = repositorioUsuario.findById(user.getId()).getPassword();
+		assertEquals(passAntigua, passActual);
+	}
 
 }
