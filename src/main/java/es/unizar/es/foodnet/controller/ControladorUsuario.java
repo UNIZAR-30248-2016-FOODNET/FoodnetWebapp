@@ -42,7 +42,7 @@ public class ControladorUsuario {
     @RequestMapping(value = "/modificarUsuario")
     public String modificarUsuario(){
         System.out.println("Me ha llegado la peticion de cargar el panel de modificar datos de un usuario");
-        return "htmlPablo";
+        return "modificarDatosUsuario";
     }
 
     /**
@@ -166,14 +166,18 @@ public class ControladorUsuario {
                 String password = user.getPassword();
                 if (!password.equals("") && !pw.isPasswordValid(password, userRepo.getPassword())) {
                     // La contraseña ha cambiado
-                    user.setPassword(pw.generatePassword(user.getPassword()));
+                    userRepo.setPassword(pw.generatePassword(user.getPassword()));
                 } else if (password.equals("")) {
                     // La contraseña no se quiere modificar
-                    user.setPassword(userRepo.getPassword());
+                    userRepo.setPassword(userRepo.getPassword());
                 }
-                repoUsuario.save(user);
+                userRepo.setEmail(user.getEmail());
+                userRepo.setNombre(user.getNombre());
+                userRepo.setApellidos(user.getApellidos());
+                userRepo.setDireccion(user.getDireccion());
+                repoUsuario.save(userRepo);
                 //Actualizamos el usuario de la sesion con los nuevos datos
-                request.getSession().setAttribute("user",user);
+                request.getSession().setAttribute("user",userRepo);
                 return "redirect:/modificarUsuario";
             } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                 System.err.println("Error al generar password cifrada del usuario " + user.getEmail());

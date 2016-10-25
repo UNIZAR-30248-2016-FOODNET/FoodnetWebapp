@@ -6,21 +6,17 @@ import es.unizar.es.foodnet.model.entity.Supermercado;
 import es.unizar.es.foodnet.model.repository.RepositorioCategoria;
 import es.unizar.es.foodnet.model.repository.RepositorioProducto;
 import es.unizar.es.foodnet.model.repository.RepositorioSupermercado;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -39,10 +35,6 @@ public class ProductoTest {
      */
     @Before
     public void inicializar () {
-        repositorioCategoria.deleteAll();
-        repositorioSupermercado.deleteAll();
-        repositorioProducto.deleteAll();
-
         repositorioCategoria.save(new Categoria("categoria1"));
         repositorioSupermercado.save(new Supermercado("supermercado1"));
 
@@ -51,6 +43,22 @@ public class ProductoTest {
 
         repositorioProducto.save(new Producto(categoria, supermercado, "producto1", 0.80, "http://placehold.it/650x450"));
         repositorioProducto.save(new Producto(categoria, supermercado, "producto3", 10, "http://placehold.it/650x450"));
+    }
+
+    /**
+     * Borra las categorias, supermercados y productos
+     * utilizados para las pruebas.
+     */
+    @After
+    public void finalizar () {
+        Producto p1 = repositorioProducto.findByNombre("producto1");
+        Producto p3 = repositorioProducto.findByNombre("producto3");
+        Categoria c1 = repositorioCategoria.findByNombre("categoria1");
+        Supermercado s1 = repositorioSupermercado.findByNombre("supermercado1");
+        repositorioProducto.delete(p1);
+        repositorioProducto.delete(p3);
+        repositorioCategoria.delete(c1);
+        repositorioSupermercado.delete(s1);
     }
 
     /**
@@ -68,7 +76,7 @@ public class ProductoTest {
      * son encontrados satisfactoriamente, comprobando que los nombres coinciden,
      * asi como su categoria y el supermercado al cual pertenecen.
      */
-    @Test
+    /*@Test
     public void findAllTest () {
         boolean bien = true;
         ArrayList<String> esperada = new ArrayList<>();
@@ -93,7 +101,7 @@ public class ProductoTest {
 
         assertTrue(bien);
     }
-
+*/
     /**
      * Test que comprueba que al realizar la busqueda de un producto existente
      * por su nombre, lo encuentra satisfactoriamente

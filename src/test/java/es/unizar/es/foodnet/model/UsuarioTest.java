@@ -3,6 +3,7 @@ package es.unizar.es.foodnet.model;
 import es.unizar.es.foodnet.controller.ControladorUsuario;
 import es.unizar.es.foodnet.model.entity.Usuario;
 import es.unizar.es.foodnet.model.repository.RepositorioUsuario;
+import es.unizar.es.foodnet.model.service.Password;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -134,6 +135,7 @@ public class UsuarioTest {
 	 */
 	@Test
 	public void modificarDatosUsuario() {
+		Password pw = new Password();
 		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
 		cu.registrarUsuario(user);
 		user.setNombre("pepe2");
@@ -151,7 +153,15 @@ public class UsuarioTest {
 		assertEquals(user.getApellidos(), userRepo.getApellidos());
 		assertEquals(user.getDireccion(), userRepo.getDireccion());
 		assertEquals(user.getEmail(), userRepo.getEmail());
-		assertEquals(user.getPassword(), userRepo.getPassword());
+		try {
+			if (pw.isPasswordValid(user.getPassword(), userRepo.getPassword())) {
+				assertTrue(true);
+			} else {
+				assertTrue(false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
