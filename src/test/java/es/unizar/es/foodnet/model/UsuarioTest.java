@@ -142,7 +142,9 @@ public class UsuarioTest {
 		user.setEmail("pepe2@pepe2@gmail.com");
 		user.setPassword("zaragozaaaa");
 
-		cu.modificarDatosUsuario(user);
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.getSession().setAttribute("user",user);
+		cu.modificarDatosUsuario(user, request);
 
 		Usuario userRepo = repositorioUsuario.findById(user.getId());
 		assertEquals(user.getNombre(), userRepo.getNombre());
@@ -157,14 +159,17 @@ public class UsuarioTest {
 	 * previamente y comprueba que se produce un error
 	 */
 	@Test (expected = DuplicateKeyException.class)
-	public void modificarEmailExistente() {
+	public void modificarEmailAUnoExistente() {
 		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
 		cu.registrarUsuario(user);
 
 		Usuario user2 = new Usuario("manolo", "Navarro", "manolo@gmail.com", "Zaragoza-2", "zaragoza");
 		cu.registrarUsuario(user2);
 		user2.setEmail("pepe@gmail.com");
-		cu.modificarDatosUsuario(user2);
+
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.getSession().setAttribute("user",user2);
+		cu.modificarDatosUsuario(user2,request);
 	}
 
 	/**
@@ -178,7 +183,10 @@ public class UsuarioTest {
 		cu.registrarUsuario(user);
 		String passAntigua = repositorioUsuario.findById(user.getId()).getPassword();
 		user.setPassword("");
-		cu.modificarDatosUsuario(user);
+
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.getSession().setAttribute("user",user);
+		cu.modificarDatosUsuario(user, request);
 
 		String passActual = repositorioUsuario.findById(user.getId()).getPassword();
 		assertEquals(passAntigua, passActual);

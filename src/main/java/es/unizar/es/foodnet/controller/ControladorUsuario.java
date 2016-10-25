@@ -36,6 +36,16 @@ public class ControladorUsuario {
     }
 
     /**
+     * Devuelve la pagina encargada de modificar los datos de un usuario
+     * @return html para modificar datos de un usuario
+     */
+    @RequestMapping(value = "/modificarUsuario")
+    public String modificarUsuario(){
+        System.out.println("Me ha llegado la peticion de cargar el panel de modificar datos de un usuario");
+        return "htmlPablo";
+    }
+
+    /**
      * Obtiene un usuario del formulario html e intenta registrarlo
      * @param user usuario a registrar
      * @return redireccion a index
@@ -145,33 +155,35 @@ public class ControladorUsuario {
      * no se encuentra el usuario del que modificar datos
      */
     @RequestMapping(value="/modificarDatos", method = RequestMethod.POST)
-    public String modificarDatosUsuario(Usuario user){
+    public String modificarDatosUsuario(Usuario user, HttpServletRequest request){
         System.out.println("Detectada peticion para modificar datos del usuario " + user.getEmail());
-        Usuario userRepo = repoUsuario.findById(user.getId());
-        if(userRepo != null) {
+        Usuario logueado = (Usuario) request.getSession().getAttribute("user");
+        Usuario userRepo = repoUsuario.findById(logueado.getId());
+        if(userRepo != null) {  //Obtenemos el usuario correctamente de la bbdd
             // Comprueba si ha cambiado la contraseña
             Password pw = new Password();
             try {
                 String password = user.getPassword();
-                if ((password != null) && !password.equals("")
-                        && !pw.isPasswordValid(password, userRepo.getPassword())) {
+                if (!password.equals("") && !pw.isPasswordValid(password, userRepo.getPassword())) {
                     // La contraseña ha cambiado
                     user.setPassword(pw.generatePassword(user.getPassword()));
-                } else if ((password == null) || password.equals("")) {
+                } else if (password.equals("")) {
                     // La contraseña no se quiere modificar
                     user.setPassword(userRepo.getPassword());
                 }
-
                 repoUsuario.save(user);
+                //Actualizamos el usuario de la sesion con los nuevos datos
+                request.getSession().setAttribute("user",user);
+                return "redirect:/modificarUsuario";
             } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                 System.err.println("Error al generar password cifrada del usuario " + user.getEmail());
-                return "redirect:/modificarDatosUsuario";
+                return "redirect:/modificarUsuario";
             }
         } else{
-            System.err.println("Error al intentar modificar los datos del usuario.");
-            return "redirect:/panelLogin";
+            System.err.println("No se han podido obtener los datos del usuario " + logueado.getEmail());
+            request.getSession().invalidate();
+            return "redirect:/";
         }
-        return "redirect:/modificarDatosUsuario";
     }
 
 
@@ -185,8 +197,8 @@ public class ControladorUsuario {
 
         Usuario user = (Usuario) request.getSession().getAttribute("user");
         System.out.println("Detectada peticion para eliminar al usuario " + user.getEmail());
-        request.getSession().invalidate();
         repoUsuario.delete(user);
+        request.getSession().invalidate();
 
         return "redirect:/";
     }
