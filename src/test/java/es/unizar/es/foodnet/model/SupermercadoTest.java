@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -21,15 +23,19 @@ public class SupermercadoTest {
 
     @Autowired
     private RepositorioSupermercado repositorioSupermercado;
+    private int cantidad;
 
     /**
-     * Guarda los supermercados necesarios para realizar las pruebas
+     * Guarda los supermercados necesarios para realizar las pruebas y calcula
+     * el número de productos actualmente del carro.
      */
     @Before
     public void inicializar () {
+        this.cantidad = repositorioSupermercado.findAll().size();
         repositorioSupermercado.save(new Supermercado("supermercado2"));
         repositorioSupermercado.save(new Supermercado("supermercado4"));
         repositorioSupermercado.save(new Supermercado("supermercado1"));
+        this.cantidad += 3;
     }
 
     /**
@@ -55,34 +61,16 @@ public class SupermercadoTest {
 
 
     /**
-     * Test para comprobar que los supermercados almacenadas en la base de datos
-     * son encontrados satisfactoriamente, comprobando que los nombres coinciden
+     * Test para comprobar que el número de supermercados almacenados en la base de datos
+     * coincide con el número esperado.
      */
-    /*@Test
+    @Test
     public void findAllTest () {
-        boolean bien = true;
-        ArrayList<String> esperada = new ArrayList<>();
-        esperada.add("supermercado1");
-        esperada.add("supermercado2");
-        esperada.add("supermercado4");
         List<Supermercado> lista = repositorioSupermercado.findAll();
-        if (lista.size() == esperada.size()) {
-            for (Supermercado supermercado : lista) {
-                for (String esperando : esperada) {
-                    if (esperando.equals(supermercado.getNombre())) {
-                        bien = true;
-                        break;
-                    }
-                    bien = false;
-                }
-            }
-        } else {
-            bien = false;
-        }
 
-        assertTrue(bien);
+        assertEquals(this.cantidad, lista.size());
     }
-*/
+
     /**
      * Test para comprobar que no se puede insertar un supermercado con el mismo nombre
      * que una ya almacenado en el sistema

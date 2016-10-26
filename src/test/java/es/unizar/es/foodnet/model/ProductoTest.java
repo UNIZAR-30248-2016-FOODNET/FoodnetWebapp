@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -28,6 +30,7 @@ public class ProductoTest {
     private RepositorioSupermercado repositorioSupermercado;
     @Autowired
     private RepositorioProducto repositorioProducto;
+    private int cantidad;
 
     /**
      * Elimina los productos que hay inicialmente en la base de datos, junto a sus categorias
@@ -35,6 +38,7 @@ public class ProductoTest {
      */
     @Before
     public void inicializar () {
+        this.cantidad = repositorioProducto.findAll().size();
         repositorioCategoria.save(new Categoria("categoria1"));
         repositorioSupermercado.save(new Supermercado("supermercado1"));
 
@@ -43,6 +47,7 @@ public class ProductoTest {
 
         repositorioProducto.save(new Producto(categoria, supermercado, "producto1", 0.80, "http://placehold.it/650x450"));
         repositorioProducto.save(new Producto(categoria, supermercado, "producto3", 10, "http://placehold.it/650x450"));
+        this.cantidad += 2;
     }
 
     /**
@@ -76,32 +81,13 @@ public class ProductoTest {
      * son encontrados satisfactoriamente, comprobando que los nombres coinciden,
      * asi como su categoria y el supermercado al cual pertenecen.
      */
-    /*@Test
+    @Test
     public void findAllTest () {
-        boolean bien = true;
-        ArrayList<String> esperada = new ArrayList<>();
-        esperada.add("producto1");
-        esperada.add("producto3");
         List<Producto> lista = repositorioProducto.findAll();
-        if (lista.size() == esperada.size()) {
-            for (Producto producto : lista) {
-                for (String esperando : esperada) {
-                    if (esperando.equals(producto.getNombre()) &&
-                            producto.getCategoria().getNombre().equals("categoria1") &&
-                            producto.getSupermercado().getNombre().equals("supermercado1")) {
-                        bien = true;
-                        break;
-                    }
-                    bien = false;
-                }
-            }
-        } else {
-            bien = false;
-        }
 
-        assertTrue(bien);
+        assertEquals(this.cantidad, lista.size());
     }
-*/
+
     /**
      * Test que comprueba que al realizar la busqueda de un producto existente
      * por su nombre, lo encuentra satisfactoriamente

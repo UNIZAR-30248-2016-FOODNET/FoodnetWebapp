@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 
@@ -20,16 +22,18 @@ public class CategoriaTest {
 
     @Autowired
     private RepositorioCategoria repositorioCategoria;
-
+    private int cantidad;
     /**
      * Inicializa las categorias añadiendo las necesarias
      * para realizar las pruebas
      */
     @Before
     public void inicializar () {
+        this.cantidad = repositorioCategoria.findAll().size();
         repositorioCategoria.save(new Categoria("categoria2"));
         repositorioCategoria.save(new Categoria("categoria4"));
         repositorioCategoria.save(new Categoria("categoria1"));
+        this.cantidad += 3;
     }
 
     /**
@@ -57,30 +61,11 @@ public class CategoriaTest {
      * Test para comprobar que las categorias almacenadas en la base de datos
      * son encontradas satisfactoriamente, comprobando que los nombres coinciden
      */
-    /*@Test
+    @Test
     public void findAllTest () {
-        boolean bien = true;
-        ArrayList<String> esperada = new ArrayList<>();
-        esperada.add("categoria1");
-        esperada.add("categoria2");
-        esperada.add("categoria4");
         List<Categoria> lista = repositorioCategoria.findAll();
-        if (lista.size() == esperada.size()) {
-            for (Categoria categoria : lista) {
-                for (String esperando : esperada) {
-                    if (esperando.equals(categoria.getNombre())) {
-                        bien = true;
-                        break;
-                    }
-                    bien = false;
-                }
-            }
-        } else {
-            bien = false;
-        }
-
-        assertTrue(bien);
-    }*/
+        assertEquals(this.cantidad, lista.size());
+    }
 
     /**
      * Test para comprobar que no se puede insertar una categoria con el mismo nombre
