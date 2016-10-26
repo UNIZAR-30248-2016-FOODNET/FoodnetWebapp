@@ -22,6 +22,21 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+                <!-- Split button -->
+                <div class="btn-group col-md-12 col-sm-12 col-lg-12" style="padding-bottom: 20px">
+                    <button type="button" class="btn btn-primary">Ordenar por:</button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="/">Alfabético: de menor a mayor</a></li>
+                        <li><a href="/?ordenacion=nombremayormenor">Alfabético: de mayor a menor</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/?ordenacion=preciomenormayor">Precio: de menor a mayor</a></li>
+                        <li><a href="/?ordenacion=preciomayormenor">Precio: de mayor a menor</a></li>
+                    </ul>
+                </div>
                 <div class="col-sm-6 col-md-4 col-lg-3" th:each="producto : ${listaProductos}">
                     <div class="thumbnail">
                         <h4 class="text-center"><span class="label label-info" th:text="${producto.getCategoria().getNombre()}">Categoría Producto</span></h4>
