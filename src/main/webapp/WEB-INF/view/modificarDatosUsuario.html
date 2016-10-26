@@ -4,52 +4,54 @@
 
 <head th:fragment="header">
     <meta charset="utf-8" />
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../../resources/css/modificarDatosUsuario.css" th:href="@{/resources/css/modificarDatosUsuario.css}" />
     <title th:text="#{modificarUsuario.pagina.titulo}">Modificar datos de usuario</title>
 </head>
 
 <body>
-   <!-- <div th:include="navbar"></div> -->
+   <div th:include="navbar"></div>
 
     <div class="container">
         <h1 class="text-center">
-            MODIFICAR DATOS DE USUARIO
+            Modificar datos de usuario
         </h1>
         <br/>
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-6 col-md-offset-3" id="panelMod">
                 <div class="panel panel-modify">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-12">
                                 <form id="modify-form" action="/modificarDatos" method="post" role="form" modelAttribute="Usuario" style="display: block;">
                                     <div class="form-group">
+                                        <label for="email">Email:</label>
                                         <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email" th:value="${session.user.getEmail()}" required="required"/>
                                         <div class='validation' id="emailError" style='color:#ff0025;display:none;'>* El email introducido ya está en uso</div>
                                     </div>
                                     <div class="form-group">
+                                        <label for="nombre">Nombre:</label>
                                         <input type="text" name="nombre" id="nombre" tabindex="2" class="form-control" placeholder="Nombre" th:value="${session.user.getNombre()}" required="required"/>
                                     </div>
                                     <div class="form-group">
+                                        <label for="apellidos">Apellidos:</label>
                                         <input type="text" name="apellidos" id="apellidos" tabindex="3" class="form-control" placeholder="Apellidos" th:value="${session.user.getApellidos()}" required="required"/>
                                     </div>
                                     <div class="form-group">
+                                        <label for="direccion">Dirección:</label>
                                         <input type="text" name="direccion" id="direccion" tabindex="4" class="form-control" placeholder="Dirección" th:value="${session.user.getDireccion()}" required="required"/>
                                     </div>
                                     <div class="form-group">
+                                        <label for="password">Password (en blanco para mantener la actual):</label>
                                         <input type="password" name="password" id="password" tabindex="5" class="form-control" placeholder="Nuevo password" value=""/>
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="submit" name="modify-submit" id="modify-submit" tabindex="6" class="form-control btn btn-modify" value="Modificar"/>
+                                        <input type="submit" name="modify-submit" id="modify-submit" tabindex="6" class="form-control btn btn-primary" value="Modificar"/>
                                     </div>
                                 </form>
-                                <form id="eliminate-form" action="/eliminarUsuario" method="post" role="form" modelAttribute="Usuario" style="display: block;">
-                                    <div class="col-sm-6">
-                                        <input type="submit" name="eliminate-submit" id="eliminate-submit" tabindex="7" class="form-control btn btn-modify" value="Eliminar"/>
-                                    </div>
-                                </form>
+                                <div class="col-sm-6">
+                                    <input type="submit" name="eliminate-submit" id="eliminate-submit" tabindex="7" class="form-control btn btn-danger" value="Eliminar" onclick="confirmar()"/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -58,4 +60,19 @@
         </div>
     </div>
 </body>
+
+<script>
+    function confirmar() {
+        bootbox.confirm({
+            message: "¿Estás seguro de que deseas borrar tu usuario? No podrás deshacer esta acción",
+            callback: function(result){
+                if(result){
+                    $.post("/eliminarUsuario", {}, function(){
+                        window.open("/","_self");
+                    });
+                }
+            }
+        })
+    }
+</script>
 </html>

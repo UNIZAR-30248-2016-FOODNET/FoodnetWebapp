@@ -2,11 +2,13 @@ package es.unizar.es.foodnet.controller;
 
 import es.unizar.es.foodnet.model.entity.Usuario;
 import es.unizar.es.foodnet.model.repository.RepositorioUsuario;
+import es.unizar.es.foodnet.model.service.MessageHelper;
 import es.unizar.es.foodnet.model.service.Password;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,9 +42,12 @@ public class ControladorUsuario {
      * @return html para modificar datos de un usuario
      */
     @RequestMapping(value = "/modificarUsuario")
-    public String modificarUsuario(){
+    public String modificarUsuario(HttpServletRequest request){
         System.out.println("Me ha llegado la peticion de cargar el panel de modificar datos de un usuario");
-        return "modificarDatosUsuario";
+        if(request.getSession().getAttribute("user")!=null){
+            return "modificarDatosUsuario";
+        } else return "redirect:/";
+
     }
 
     /**
@@ -51,7 +56,7 @@ public class ControladorUsuario {
      * @return redireccion a index
      */
     @RequestMapping(value="/registrarse", method = RequestMethod.POST)
-    public String registrarUsuario(Usuario user){
+    public String registrarUsuario(Usuario user, RedirectAttributes ra){
         System.out.println("Detectada peticion para registrar al usuario " + user.getEmail());
         Password pw = new Password();
 
@@ -59,8 +64,10 @@ public class ControladorUsuario {
         try {
             user.setPassword(pw.generatePassword(user.getPassword()));
             repoUsuario.save(user);
+            MessageHelper.addSuccessAttribute(ra, "exito.registro", user.getEmail());
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             System.err.println("Error al generar password cifrada del usuario " + user.getEmail());
+            MessageHelper.addErrorAttribute(ra,"fallo.password.cifrar",user.getEmail());
         }
 
         return "redirect:/";
@@ -77,7 +84,7 @@ public class ControladorUsuario {
     public String autenticarUsuario(@RequestParam("email") String email,
                                     @RequestParam("password") String password,
                                     HttpServletRequest request,
-                                    Model model){
+                                    Model model, RedirectAttributes ra){
         System.out.println("Detectada peticion para que el usuario " + email + " haga login");
 
         Password pw = new Password();
@@ -93,14 +100,17 @@ public class ControladorUsuario {
                     return "redirect:/";
                 } else{
                     System.out.println("Password no valida");
+                    MessageHelper.addErrorAttribute(ra, "fallo.login.password", "");
                     return "redirect:/panelLogin";
                 }
             } catch (Exception e) {
                 System.err.println("Error al comprobar la password del usuario " + user.getEmail());
+                MessageHelper.addErrorAttribute(ra, "fallo.password.descifrar", user.getEmail());
                 return "redirect:/panelLogin";
             }
         } else{
             System.err.println("Error al obtener el usuario cuyo email es " + email);
+            MessageHelper.addErrorAttribute(ra, "fallo.login.email", email);
             return "redirect:/panelLogin";
         }
 
@@ -155,10 +165,11 @@ public class ControladorUsuario {
      * no se encuentra el usuario del que modificar datos
      */
     @RequestMapping(value="/modificarDatos", method = RequestMethod.POST)
-    public String modificarDatosUsuario(Usuario user, HttpServletRequest request){
+    public String modificarDatosUsuario(Usuario user, HttpServletRequest request, RedirectAttributes ra){
         System.out.println("Detectada peticion para modificar datos del usuario " + user.getEmail());
         Usuario logueado = (Usuario) request.getSession().getAttribute("user");
         Usuario userRepo = repoUsuario.findById(logueado.getId());
+
         if(userRepo != null) {  //Obtenemos el usuario correctamente de la bbdd
             // Comprueba si ha cambiado la contraseña
             Password pw = new Password();
@@ -171,21 +182,29 @@ public class ControladorUsuario {
                     // La contraseña no se quiere modificar
                     userRepo.setPassword(userRepo.getPassword());
                 }
+
                 userRepo.setEmail(user.getEmail());
                 userRepo.setNombre(user.getNombre());
                 userRepo.setApellidos(user.getApellidos());
                 userRepo.setDireccion(user.getDireccion());
                 repoUsuario.save(userRepo);
+
                 //Actualizamos el usuario de la sesion con los nuevos datos
                 request.getSession().setAttribute("user",userRepo);
+
+                //Alertas
+                MessageHelper.addSuccessAttribute(ra,"exito.usuario.modificar","");
+
                 return "redirect:/modificarUsuario";
             } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                 System.err.println("Error al generar password cifrada del usuario " + user.getEmail());
+                MessageHelper.addErrorAttribute(ra,"fallo.password.cifrar",user.getEmail());
                 return "redirect:/modificarUsuario";
             }
         } else{
             System.err.println("No se han podido obtener los datos del usuario " + logueado.getEmail());
             request.getSession().invalidate();
+            MessageHelper.addErrorAttribute(ra,"fallo.interno.sesion",logueado.getEmail());
             return "redirect:/";
         }
     }
@@ -194,16 +213,16 @@ public class ControladorUsuario {
     /**
      * Elimina al usuario de la base de datos y redirige a la pagina principal
      * @param request request del usuario que hace la peticion
-     * @return redireccion a la pagina de login/registro
      */
-    @RequestMapping(value="/eliminarUsuario")
-    public String eliminarUsuario(HttpServletRequest request){
-
+    @RequestMapping(value = "/eliminarUsuario", method = RequestMethod.POST)
+    public String eliminacionUsuario(HttpServletRequest request, RedirectAttributes ra){
         Usuario user = (Usuario) request.getSession().getAttribute("user");
-        System.out.println("Detectada peticion para eliminar al usuario " + user.getEmail());
-        repoUsuario.delete(user);
-        request.getSession().invalidate();
-
+        if(user!=null){
+            System.out.println("Detectada peticion para eliminar al usuario " + user.getEmail());
+            MessageHelper.addSuccessAttribute(ra,"exito.usuario.borrar",user.getEmail());
+            repoUsuario.delete(user);
+            request.getSession().invalidate();
+        }
         return "redirect:/";
     }
 }

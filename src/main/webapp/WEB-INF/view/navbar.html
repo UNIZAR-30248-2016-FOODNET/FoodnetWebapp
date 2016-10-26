@@ -6,8 +6,8 @@
     <meta charset="utf-8" />
     <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="../../resources/js/bootstrap.min.js"></script>
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="../../resources/js/bootbox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../../resources/css/navbar.css" th:href="@{/resources/css/navbar.css}" />
     <link rel="stylesheet" href="../../resources/css/cart.css" th:href="@{/resources/css/cart.css}" />
 </head>
@@ -28,8 +28,8 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="active changeActive">
-                    <a href="#">Catálogo</a>
+                <li>
+                    <a href="/">Catálogo</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -107,6 +107,14 @@
         </div><!-- /.navbar-collapse -->
     </div>
 </nav>
+
+<body>
+<!-- /* Handle the flash message */-->
+<th:block th:if="${message != null}">
+    <!-- /* The message code is returned from the @Controller */ -->
+    <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${message.args})})">&nbsp;</div>
+</th:block>
+</body>
 
 <script>
     $(document).ready(function() {
