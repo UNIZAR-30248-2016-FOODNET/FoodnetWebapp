@@ -16,3 +16,10 @@
 1. Installing mongodb: [Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/), [OS X](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/), [Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
 2. Accesing data with mongodb: [Link](https://spring.io/guides/gs/accessing-data-mongodb/)
 3. Project example running with Thymeleaf: [Link](http://krams915.blogspot.com.es/2012/12/spring-and-thymeleaf-with-javaconfig_2.html)
+
+## Contributing to this project
+1. Fork the project
+2. Clone the project
+3. Configure the upstream: `git remote add upstream https://github.com/UNIZAR-30248-2016-FOODNET/FoodnetWebapp.git`
+4. To stay updated with the latest main updates, in IntelliJ go to `VCS->Git->Fetch` to update the branch. Afterwards you will need to merge the updated upstream with your current local branch, to do so: `VCS->Git->Merge changes`
+5. After you have changes made and pushed to your local fork, to request a contribution just open a pull request
