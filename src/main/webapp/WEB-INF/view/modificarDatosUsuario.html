@@ -50,7 +50,9 @@
                                     </div>
                                 </form>
                                 <div class="col-sm-6">
-                                    <input type="submit" name="eliminate-submit" id="eliminate-submit" tabindex="7" class="form-control btn btn-danger" value="Eliminar" onclick="confirmar()"/>
+                                    <form id="delete-form" action="/eliminarUsuario" onsubmit="event.preventDefault(); confirmar();" method="post" role="form">
+                                        <input type="submit" name="eliminate-submit" id="eliminate-submit" tabindex="7" class="form-control btn btn-danger" value="Eliminar"/>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -67,9 +69,7 @@
             message: "¿Estás seguro de que deseas borrar tu usuario? No podrás deshacer esta acción",
             callback: function(result){
                 if(result){
-                    $.post("/eliminarUsuario", {}, function(){
-                        window.open("/","_self");
-                    });
+                    document.getElementById("delete-form").submit();
                 }
             }
         })
