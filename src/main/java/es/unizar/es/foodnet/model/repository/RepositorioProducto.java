@@ -11,6 +11,9 @@ public interface RepositorioProducto extends MongoRepository<Producto,String> {
     // Busca un producto a partir de su nombre
     Producto findByNombre(String nombre);
 
+    // Busca un producto a partir de su id
+    Producto findById(String id);
+
     //@Query( value="{ category.$name: ?0 }")
     //List<Producto> findByCategory(String category);
 

@@ -44,9 +44,13 @@
                         <div class="caption" style="text-align: center">
                             <h4 th:text="${producto.getNombre()}">Nombre producto</h4>
                             <h4>
-                                <label th:text="${producto.getPrecio() + '€'}">€123.45</label>
+                                <label th:text="${#numbers.formatDecimal(producto.getPrecio(),0,2) + '€'}">€123.45</label>
                             </h4>
-                            <a href="#" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span>Añadir al carro</a>
+                            <a href="#" th:onclick="'javascript:aumentar(\'' + ${producto.getNombre()} +
+                             ',' + ${producto.getPrecio()} + ',' + ${producto.getImagen()} + ',' + ${producto.getId()} + '\');'"
+                               class="btn btn-success btn-product">
+                                <span class="glyphicon glyphicon-shopping-cart"></span>Añadir al carro
+                            </a>
                             <p> </p>
                         </div>
                     </div>

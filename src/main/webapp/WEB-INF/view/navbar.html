@@ -26,7 +26,7 @@
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <li class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>
                     <a href="/">Catálogo</a>
@@ -81,21 +81,28 @@
                     <a href="#">Historial de pedidos</a>
                 </li>
                 <li>
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <span class="glyphicon glyphicon-shopping-cart"></span> 7 - Items<span class="caret"></span></a>
-                    <ul class="dropdown-menu dropdown-cart" role="menu">
-                        <li>
-                                    <span class="item">
-                                        <span class="item-left">
-                                            <img src="http://placehold.it/50x50" alt="" />
-                                            <span class="item-info">
-                                                <span>Item name</span>
-                                                <span>23$</span>
-                                            </span>
-                                        </span>
-                                        <span class="item-right">
-                                            <button class="btn btn-xs btn-danger pull-right">x</button>
-                                        </span>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <span class="glyphicon glyphicon-shopping-cart"></span>
+                        <span id="numItems" th:if="${session.productosCarro!=null}" th:text="${session.productosCarro}">0</span>
+                        <span th:if="${session.productosCarro!=null}"> - Productos </span>
+                        <span th:if="${session.productosCarro==null}" id="numItems">0</span>
+                        <span th:if="${session.productosCarro==null}"> - Productos </span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-cart" role="menu" id="carroCompra">
+                        <li th:each="itemCarro : ${session.carroProductos}">
+                            <span class="item">
+                                <span class="item-left">
+                                    <img src="http://placehold.it/50x50" th:src="${itemCarro.getProducto().getImagen()}" th:width="50" th:height="50" alt="" />
+                                    <span class="item-info">
+                                    <span th:text="${itemCarro.getProducto().getNombre()}">Item name</span>
+                                    <span th:text="${itemCarro.getProducto().getPrecio() + '€'}">€23</span>
                                     </span>
+                                </span>
+                                <span class="item-right">
+                                    <button class="btn btn-xs btn-danger pull-right">x</button>
+                                </span>
+                            </span>
                         </li>
                         <li class="divider"></li>
                         <li>
@@ -121,7 +128,48 @@
         // get current URL path and assign 'active' class
         var pathname = window.location.pathname;
         $('.nav > li > a[href="'+pathname+'"]').parent().addClass('active');
-    })
+    });
+    var numProductos = document.getElementById('numItems').innerHTML;
+    function aumentar(productoSinParsear){
+        //parte navbar
+        var productos = productoSinParsear.split(",");
+        var nombre = productos[0];
+        var precio = productos[1];
+        var imagen = productos[2];
+        var id = productos[3];
+        var textBox = document.getElementById("numItems");
+        numProductos++;
+        textBox.innerHTML = numProductos;
+
+        //parte dropdown carro
+
+        //clonamos el boton de ver carro
+        var lista = document.getElementById('carroCompra'), verCarro = lista.lastElementChild;
+        var clonVer = verCarro.cloneNode(true);
+        var list = document.getElementById('carroCompra'), item = list.lastElementChild;
+        list.removeChild(item);
+
+        //clonamos el divider
+        var lista2 = document.getElementById('carroCompra'), divider = lista2.lastElementChild;
+        var clonDivider = divider.cloneNode(true);
+        var list2 = document.getElementById('carroCompra'), item2 = list2.lastElementChild;
+        list2.removeChild(item2);
+
+        $.post("/addProductoCarro", {id:id}, function(result){
+            if(result.trim() != 'existe'){
+                $('#carroCompra').append('<li><span class="item"><span class="item-left">' +
+                        '<img src="' + imagen + '" width="50" height="50" alt="" />' +
+                        '<span class="item-info"> ' +
+                        '<span>' + nombre + '</span> ' +
+                        '<span>' + precio + '€</span></span>' +
+                        '</span>' +
+                        '<span class="item-right"> ' +
+                        '<button class="btn btn-xs btn-danger pull-right">x</button></span></span></li>');
+            }
+            document.getElementById("carroCompra").appendChild(clonDivider);
+            document.getElementById("carroCompra").appendChild(clonVer);
+        });
+    }
 </script>
 
 </html>

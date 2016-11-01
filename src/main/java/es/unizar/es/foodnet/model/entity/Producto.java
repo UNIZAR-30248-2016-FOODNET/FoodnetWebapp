@@ -30,6 +30,10 @@ public class Producto {
         this.imagen = imagen;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public Categoria getCategoria() {
         return categoria;
     }

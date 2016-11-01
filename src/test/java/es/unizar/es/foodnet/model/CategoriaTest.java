@@ -47,6 +47,7 @@ public class CategoriaTest {
         repositorioCategoria.delete(c2);
         repositorioCategoria.delete(c1);
         repositorioCategoria.delete(c4);
+        this.cantidad-=3;
     }
 
     /**
