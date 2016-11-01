@@ -40,6 +40,9 @@ public class ControladorCarro {
         return "carro";
     }
 
+    /**
+     * Mapeo para la pantalla de finalizar el pago
+     */
     @RequestMapping(value="/finalizarPago")
     public String finalizarPago(HttpServletRequest request){
         System.out.println("Me ha llegado peticion para finalizar el pago");
@@ -51,6 +54,9 @@ public class ControladorCarro {
         }
     }
 
+    /**
+     * Mapeo para finalizar el pago utilizando un metodo de pago
+     */
     @RequestMapping(value="/compraFinalizada", method = RequestMethod.POST)
     public String finCompra(RedirectAttributes ra){
         System.out.println("Me ha llegado peticion para pagar la compra");
@@ -58,6 +64,10 @@ public class ControladorCarro {
         return "redirect:/";
     }
 
+    /**
+     * Mapeo para agregar un nuevo producto al carro de la compra
+     * @param id id del producto a agregar
+     */
     @RequestMapping(value="/addProductoCarro", method = RequestMethod.POST)
     public void addProductoCarro(@RequestParam("id")String id,
                                  HttpServletRequest request,
@@ -129,6 +139,11 @@ public class ControladorCarro {
         return indice;
     }
 
+    /**
+     * Devuelve el total de la compra contenida en carroCompra
+     * @param carroCompra carro de la compra
+     * @return total de la compra
+     */
     private double actualizarSubtotal(ArrayList<ProductoCarro> carroCompra){
         double cuentaIntermedia = 0.0;
         for(ProductoCarro p : carroCompra){
