@@ -1,12 +1,15 @@
 package es.unizar.es.foodnet.controller;
 
+import es.unizar.es.foodnet.model.entity.Pedido;
 import es.unizar.es.foodnet.model.entity.Producto;
 import es.unizar.es.foodnet.model.entity.Usuario;
+import es.unizar.es.foodnet.model.repository.RepositorioPedido;
 import es.unizar.es.foodnet.model.repository.RepositorioProducto;
 import es.unizar.es.foodnet.model.service.MessageHelper;
 import es.unizar.es.foodnet.model.service.ProductoCarro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Controlador encargado de lo relacionado con los carros
@@ -26,9 +31,12 @@ public class ControladorCarro {
 
     private final RepositorioProducto rp;
 
+    private final RepositorioPedido repoPedidos;
+
     @Autowired
-    public ControladorCarro(RepositorioProducto rp) {
+    public ControladorCarro(RepositorioProducto rp,RepositorioPedido repoPedidos) {
         this.rp = rp;
+        this.repoPedidos=repoPedidos;
     }
 
     /**
@@ -55,11 +63,14 @@ public class ControladorCarro {
     }
 
     /**
-     * Mapeo para finalizar el pago utilizando un metodo de pago
+     * Mapeo para finalizar el pago utilizando un metodo de pago y guardar el pedido en el repositorio
      */
     @RequestMapping(value="/compraFinalizada", method = RequestMethod.POST)
-    public String finCompra(RedirectAttributes ra){
-        System.out.println("Me ha llegado peticion para pagar la compra");
+    public String finCompra(HttpServletRequest request,RedirectAttributes ra){
+        System.out.println("Me ha llegado peticion para pagar una compra ");
+        ArrayList<ProductoCarro> carroSesion = (ArrayList<ProductoCarro>) request.getSession().getAttribute("carroProductos");
+        Usuario u =(Usuario)request.getSession().getAttribute("user");
+        repoPedidos.save(new Pedido(u,new Date(),carroSesion));
         MessageHelper.addSuccessAttribute(ra,"exito.pago","");
         return "redirect:/";
     }
