@@ -96,7 +96,7 @@
                                     <img src="http://placehold.it/50x50" th:src="${itemCarro.getProducto().getImagen()}" th:width="50" th:height="50" alt="" />
                                     <span class="item-info">
                                     <span th:text="${itemCarro.getProducto().getNombre()}">Item name</span>
-                                    <span th:text="${itemCarro.getProducto().getPrecio() + '€'}">€23</span>
+                                    <span th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio(),0,2) + '€'}">€23</span>
                                     </span>
                                 </span>
                                 <span class="item-right">
@@ -161,7 +161,7 @@
                         '<img src="' + imagen + '" width="50" height="50" alt="" />' +
                         '<span class="item-info"> ' +
                         '<span>' + nombre + '</span> ' +
-                        '<span>' + precio + '€</span></span>' +
+                        '<span>' + parseFloat(precio).toFixed(2).replace(".", ",") + '€</span></span>' +
                         '</span>' +
                         '<span class="item-right"> ' +
                         '<button class="btn btn-xs btn-danger pull-right">x</button></span></span></li>');

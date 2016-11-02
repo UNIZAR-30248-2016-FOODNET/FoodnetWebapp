@@ -27,7 +27,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="itemCarro : ${session.carroProductos}">
+                    <tr th:each="itemCarro,iterStat : ${session.carroProductos}">
                         <td class="col-sm-8 col-md-6">
                             <div class="media">
                                 <a class="thumbnail pull-left" href="#">
@@ -39,10 +39,24 @@
                                 </div>
                             </div></td>
                         <td class="col-sm-1 col-md-1" style="text-align: center">
-                            <input type="number" class="form-control" id="idCantidad-1" th:value="${itemCarro.getCantidadProducto()}" value="3" min="1">
+                            <input type="number" class="form-control"
+                                   th:id="${'idCantidad-' + iterStat.index}"
+                                   th:value="${itemCarro.getCantidadProducto()}"
+                                   th:oninput="'javascript:actualizarCantidadesProducto(\'' + ${itemCarro.getProducto().getId()} +
+                                    ',' + ${iterStat.index} +
+                                    ',' + ${itemCarro.getProducto().getPrecio()} + '\');'"
+                                   th:onchange="'javascript:actualizarCantidadesProducto(\'' + ${itemCarro.getProducto().getId()} +
+                                    ',' + ${iterStat.index} +
+                                    ',' + ${itemCarro.getProducto().getPrecio()} + '\');'"
+                                   value="3" min="1">
                         </td>
-                        <td class="col-sm-1 col-md-1 text-center"><strong th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio(),0,2)+ '€'}">€4.87</strong></td>
-                        <td class="col-sm-1 col-md-1 text-center"><strong th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio() * itemCarro.getCantidadProducto(),0,2)+ '€'}">€14.61</strong></td>
+                        <td class="col-sm-1 col-md-1 text-center">
+                            <strong th:id="${'idPrecio-' + iterStat.index}"
+                                    th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio(),0,2)+ '€'}">€4.87</strong>
+                        </td>
+                        <td class="col-sm-1 col-md-1 text-center">
+                            <strong th:id="${'idSubtotal-' + iterStat.index}" th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio() * itemCarro.getCantidadProducto(),0,2)+ '€'}">€14.61</strong>
+                        </td>
                         <td class="col-sm-1 col-md-1">
                             <button type="button" class="btn btn-danger">
                                 <span class="glyphicon glyphicon-remove"></span> Eliminar
@@ -56,7 +70,7 @@
                         <td><h5>Subtotal</h5></td>
                         <td class="text-right">
                             <h5 th:if="${session.subtotal!=null}">
-                                <strong th:text="${#numbers.formatDecimal(session.subtotal,0,2) + '€'}">€24.59</strong>
+                                <strong th:id="idSubtotal" th:text="${#numbers.formatDecimal(session.subtotal,0,2) + '€'}">€24.59</strong>
                             </h5>
                         </td>
                     </tr>
@@ -65,7 +79,7 @@
                         <td>   </td>
                         <td>   </td>
                         <td><h5>Otros costes</h5></td>
-                        <td class="text-right"><h5><strong>€6.90</strong></h5></td>
+                        <td class="text-right"><h5><strong th:text="${#numbers.formatDecimal(6.9,0,2) + '€'}">€6.90</strong></h5></td>
                     </tr>
                     <tr>
                         <td>   </td>
@@ -74,7 +88,7 @@
                         <td><h3>Total</h3></td>
                         <td class="text-right">
                             <h3 th:if="${session.subtotal!=null}">
-                                <strong th:text="${#numbers.formatDecimal(session.subtotal + 6.9,0,2) + '€'}">€31.53</strong>
+                                <strong th:id="idTotal" th:text="${#numbers.formatDecimal(session.subtotal + 6.9,0,2) + '€'}">€31.53</strong>
                             </h3>
                         </td>
                     </tr>
@@ -95,4 +109,33 @@
         </div>
     </div>
 </body>
+
+<script>
+    function actualizarCantidadesProducto(elementosSinParsear){
+        var elementosParseados = elementosSinParsear.split(",");
+        var idProducto = elementosParseados[0];
+        var indice = elementosParseados[1];
+        var precioIndividual = elementosParseados[2];
+
+        var cantidadNueva=document.getElementById('idCantidad-'+indice).value;
+
+        //actualizar subtotal producto
+        var subtotalProducto = (precioIndividual * cantidadNueva).toFixed(2).replace(".", ",") + '€';
+        document.getElementById('idSubtotal-'+indice).innerHTML=subtotalProducto;
+
+        $.post("/actualizarCantidades", {id:idProducto, cantidad:cantidadNueva}, function(result){
+            var resultParseado = result.split(",");
+            var subtotal = resultParseado[0];
+            var numProductos = resultParseado[1];
+            //actualizar contador numProductos
+            document.getElementById('numItems').innerHTML=numProductos;
+            //actualizar subtotal total
+            var subtotalTotal = parseFloat(subtotal).toFixed(2).replace(".", ",") + '€';
+            document.getElementById('idSubtotal').innerHTML=subtotalTotal;
+            //actualizar total
+            var total = parseFloat(parseFloat(subtotal)+6.9).toFixed(2).replace(".", ",") + '€';
+            document.getElementById('idTotal').innerHTML=total;
+        });
+    }
+</script>
 </html>

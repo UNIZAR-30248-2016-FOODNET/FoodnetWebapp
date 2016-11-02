@@ -117,6 +117,40 @@ public class ControladorCarro {
     }
 
     /**
+     * Mapeo para actualizar las cantidades habiendolas modificado en el panel de la compra
+     * @param request request del usuario
+     * @param response response hacia el usuario
+     * @param id id del producto a actualizar
+     * @param cantidad nueva cantidad del producto
+     */
+    @RequestMapping(value="/actualizarCantidades", method = RequestMethod.POST)
+    public void actualizarCantidades(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     @RequestParam("id")String id,
+                                     @RequestParam("cantidad")int cantidad){
+        System.out.println("Me ha llegado peticion para actualizar el carro de la compra");
+
+        try {
+            PrintWriter out = response.getWriter();
+            ArrayList<ProductoCarro> carroSesion = (ArrayList<ProductoCarro>) request.getSession().getAttribute("carroProductos");
+            Producto p = rp.findById(id);
+
+            ArrayList<ProductoCarro> carroNuevo = actualizar(carroSesion,p,cantidad);
+            double subtotal = actualizarSubtotal(carroNuevo);
+            int numProductos = numProductosCarro(carroNuevo);
+
+            request.getSession().setAttribute("carroProductos",carroNuevo);
+            request.getSession().setAttribute("productosCarro",numProductos);
+            request.getSession().setAttribute("subtotal",subtotal);
+
+            out.print(subtotal+","+numProductos);
+
+        } catch (IOException e) {
+            System.err.println("Error al obtener la salida hacia el cliente");
+        }
+    }
+
+    /**
      * Si existe el producto p en la lista pc, se actualizan sus cantidades con 1 mas, sino se agrega con cantidad 1.
      * @param pc carro de productos
      * @param p producto a agregar
@@ -130,6 +164,19 @@ public class ControladorCarro {
             pc2.add(new ProductoCarro(p,1));
         }
 
+        return pc2;
+    }
+
+    /**
+     * Actualiza el producto p del carro pc con cantidad cantidades
+     * @param pc carro de productos
+     * @param p producto a agregar
+     * @param cantidad nueva cantidad del producto
+     * @return nuevo carro
+     */
+    private ArrayList<ProductoCarro> actualizar(ArrayList<ProductoCarro> pc, Producto p, Integer cantidad){
+        ArrayList<ProductoCarro> pc2 = (ArrayList<ProductoCarro>) pc.clone();
+        pc2.get(indiceExistencia(pc,p)).setCantidadProducto(cantidad);
         return pc2;
     }
 
@@ -161,5 +208,18 @@ public class ControladorCarro {
             cuentaIntermedia = cuentaIntermedia + (((double) p.getCantidadProducto()) * p.getProducto().getPrecio());
         }
         return cuentaIntermedia;
+    }
+
+    /**
+     * Devuelve el numero de productos en el carro
+     * @param carro carro de la compra
+     * @return numero de productos en el carro
+     */
+    private int numProductosCarro(ArrayList<ProductoCarro> carro){
+        int cuenta = 0;
+        for(ProductoCarro pc: carro){
+            cuenta+=pc.getCantidadProducto();
+        }
+        return cuenta;
     }
 }
