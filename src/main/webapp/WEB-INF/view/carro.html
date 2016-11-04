@@ -27,7 +27,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="itemCarro,iterStat : ${session.carroProductos}">
+                    <tr th:each="itemCarro,iterStat : ${session.carroProductos}" th:id="${'idProductoCarro-' + iterStat.index}">
                         <td class="col-sm-8 col-md-6">
                             <div class="media">
                                 <a class="thumbnail pull-left" href="#">
@@ -37,7 +37,8 @@
                                     <h4 class="media-heading"><a href="#" th:text="${itemCarro.getProducto().getNombre()}">Nombre producto</a></h4>
                                     <h5 class="media-heading"><a href="#" th:text="${itemCarro.getProducto().getSupermercado().getNombre()}">Supermercado</a></h5>
                                 </div>
-                            </div></td>
+                            </div>
+                        </td>
                         <td class="col-sm-1 col-md-1" style="text-align: center">
                             <input type="number" class="form-control"
                                    th:id="${'idCantidad-' + iterStat.index}"
@@ -58,7 +59,9 @@
                             <strong th:id="${'idSubtotal-' + iterStat.index}" th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio() * itemCarro.getCantidadProducto(),0,2)+ '€'}">€14.61</strong>
                         </td>
                         <td class="col-sm-1 col-md-1">
-                            <button type="button" class="btn btn-danger">
+                            <button th:id="${'idBotonEliminar-' + iterStat.index}" type="button" class="btn btn-danger"
+                                    th:onclick="'javascript:eliminarProducto(\'' + ${itemCarro.getProducto().getId()}
+                                        + ',' + ${iterStat.index} + '\');'">
                                 <span class="glyphicon glyphicon-remove"></span> Eliminar
                             </button>
                         </td>
@@ -135,6 +138,9 @@
             //actualizar total
             var total = parseFloat(parseFloat(subtotal)+6.9).toFixed(2).replace(".", ",") + '€';
             document.getElementById('idTotal').innerHTML=total;
+
+            document.getElementById('idCantidadProductos-' + indice).innerHTML
+                    = '<span>' + cantidadNueva + 'ud x ' + parseFloat(precioIndividual).toFixed(2).replace(".", ",") + '€/ud</span>';
         });
     }
 </script>
