@@ -1,14 +1,10 @@
 package es.unizar.es.foodnet.controller;
 
 import es.unizar.es.foodnet.model.entity.Pedido;
-import es.unizar.es.foodnet.model.entity.Producto;
 import es.unizar.es.foodnet.model.entity.Usuario;
 import es.unizar.es.foodnet.model.repository.RepositorioPedido;
-import es.unizar.es.foodnet.model.repository.RepositorioProducto;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +40,7 @@ public class ControladorPedido {
         List<Pedido> historial = new ArrayList<Pedido>();
         Usuario u =(Usuario)request.getSession().getAttribute("user");
         for(Pedido p :listaPedidos){
-            if(p.getUsuario().equals(u.getEmail())){
+            if(p.getUsuario().getEmail().equals(u.getEmail())){
                 historial.add(p);
             }
         }

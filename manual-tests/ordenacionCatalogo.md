@@ -1,0 +1,7 @@
+# Pruebas manuales de la ordenación del catálogo de productos
+1. Al acceder al catálogo, los productos deben aparecer por defecto ordenados alfabéticamente de A a la Z (Alfabético: de menor a mayor).
+2. Al pulsar sobre la flecha del botón `Ordenar por:`, se debe abrir un desplegable con 4 opciones de ordenación.
+3. Al seleccionar `Alfabético de menor a mayor` deben aparecer los productos ordenados alfabéticamente de la A a la Z siendo el primer producto el situado más arriba y a la izquierda y el último el situado más abajo y a la derecha posible.
+4. Al seleccionar `Alfabético de mayor a menor` deben aparecer los productos ordenados alfabéticamente de la Z a la A siendo el primer producto el situado más arriba y a la izquierda y el último el situado más abajo y a la derecha posible.
+5. Al seleccionar `Precio: de menor a mayor` deben aparecer los productos ordenados según su coste, siendo el producto situado más arriba y a la izquierda el más barato (precio más bajo), y el situado más abajo y a la derecha el más caro (precio más alto).
+6. Al seleccionar `Precio: de mayor a menor` deben aparecer los productos ordenados según su coste, siendo el producto situado más arriba y a la izquierda el más caro (precio más alto), y el situado más abajo y a la derecha el más barato (precio más bajo).

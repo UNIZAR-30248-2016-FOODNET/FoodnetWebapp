@@ -4,6 +4,7 @@ import es.unizar.es.foodnet.model.entity.Categoria;
 import es.unizar.es.foodnet.model.entity.Producto;
 import es.unizar.es.foodnet.model.entity.Supermercado;
 import es.unizar.es.foodnet.model.repository.RepositorioCategoria;
+import es.unizar.es.foodnet.model.repository.RepositorioPedido;
 import es.unizar.es.foodnet.model.repository.RepositorioProducto;
 import es.unizar.es.foodnet.model.repository.RepositorioSupermercado;
 import org.springframework.boot.CommandLineRunner;
@@ -20,12 +21,15 @@ public class FoodNetApplication implements CommandLineRunner {
 	private final RepositorioProducto repositorioProducto;
 	private final RepositorioCategoria repositorioCategoria;
 	private final RepositorioSupermercado repositorioSupermercado;
+	private final RepositorioPedido repositorioPedido;
 
 	@Autowired
-	public FoodNetApplication(RepositorioCategoria repositorioCategoria, RepositorioSupermercado repositorioSupermercado, RepositorioProducto repositorioProducto) {
+	public FoodNetApplication(RepositorioCategoria repositorioCategoria, RepositorioSupermercado repositorioSupermercado,
+							  RepositorioProducto repositorioProducto, RepositorioPedido repositorioPedido) {
 		this.repositorioCategoria = repositorioCategoria;
 		this.repositorioSupermercado = repositorioSupermercado;
 		this.repositorioProducto = repositorioProducto;
+		this.repositorioPedido = repositorioPedido;
 	}
 
 	public static void main(String[] args) {
@@ -43,6 +47,7 @@ public class FoodNetApplication implements CommandLineRunner {
 		repositorioProducto.deleteAll();
 		repositorioCategoria.deleteAll();
 		repositorioSupermercado.deleteAll();
+		repositorioPedido.deleteAll();
 
 		// Save one category
 		repositorioCategoria.save(new Categoria("Lacteos"));
