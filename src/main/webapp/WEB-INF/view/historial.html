@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="header">
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <title th:text="#{historial.pagina.titulo}">Historial de pedidos</title>
+</head>
+
+<body>
+    <div th:include="navbar"></div>
+
+    <div class="container">
+        <h1 class="text-center">
+            Historial de pedidos
+        </h1>
+        <div class="col-sm-12 col-md-10 col-md-offset-1">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default" th:each="pedido : ${historial}">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" th:href="'#' + ${pedido.getIdPedido()}" th:text="'idPedido: ' + ${pedido.getIdPedido()}">
+                                idPedido
+                            </a>
+                        </h4>
+                        <div th:text="'Fecha: ' + ${pedido.getFecha()}">Fecha</div>
+                    </div>
+                    <div th:id="${pedido.getIdPedido()}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <h3>Lista de productos.</h3>
+                                </tr>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th class="text-center">Supermercado</th>
+                                    <th class="text-center">Precio total</th>
+                                    <th> </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="productoCarro : ${pedido.getProductos()}">
+                                        <td class="col-sm-5 col-md-4" th:text="${productoCarro.getProducto().getNombre()}">
+                                            Nombre
+                                        </td>
+                                        <td class="col-sm-1 col-md-1 text-center" th:text="${productoCarro.getCantidadProducto()}">
+                                            Cantidad
+                                        </td>
+                                        <td class="col-sm-5 col-md-4 text-center" th:text="${productoCarro.getProducto().getSupermercado().getNombre()}">
+                                            Supermercado
+                                        </td>
+                                        <td class="col-sm-3 col-md-3 text-center" th:text="${#numbers.formatDecimal(productoCarro.getProducto().getPrecio() * productoCarro.getCantidadProducto(),0,2) + '€'}">
+                                            Precio
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong th:text="${'Precio total (gastos incluídos): ' + #numbers.formatDecimal(pedido.getCost(),0,2)} + '€'">
+                                                Coste
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

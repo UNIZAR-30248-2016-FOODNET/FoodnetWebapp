@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -27,9 +28,9 @@ public class Pedido {
         usuario=u;
         fecha=d;
         productos = l;
-        cost = 0;
+        cost = 6.9;
         for(ProductoCarro p: productos){
-            cost=p.getCantidadProducto()*p.getProducto().getPrecio();
+            cost+=p.getCantidadProducto()*p.getProducto().getPrecio();
         }
     }
 
@@ -37,8 +38,9 @@ public class Pedido {
         return usuario;
     }
 
-    public Date getFecha(){
-        return fecha;
+    public String getFecha(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(fecha);
     }
 
     //TODO: añadir campo descripcion al constructor cuando sea necesario
@@ -54,6 +56,9 @@ public class Pedido {
         return cost;
     }
 
-
+    public String getIdPedido() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        return dateFormat.format(fecha);
+    }
 
 }
