@@ -98,9 +98,10 @@ public class ControladorCarro {
                 request.getSession().setAttribute("carroProductos",carroActualizado);
                 request.getSession().setAttribute("productosCarro",numProductos);
                 request.getSession().setAttribute("subtotal",actualizarSubtotal(carroActualizado));
-                if(indiceExistencia(carroSesion,p) == -1){
-                    out.print("nuevo");
-                } else out.print("existe");
+                int indice = indiceExistencia(carroSesion, p);
+                if(indice == -1){
+                    out.print("nuevo, 1," + (carroActualizado.size()-1));
+                } else out.print("existe," + carroActualizado.get(indice).getCantidadProducto() + "," + indice);
             } else{
                 //No existe el carro
                 System.out.println("No existe carro, creo uno nuevo");
@@ -109,7 +110,7 @@ public class ControladorCarro {
                 request.getSession().setAttribute("carroProductos",listaP);
                 request.getSession().setAttribute("productosCarro",1);
                 request.getSession().setAttribute("subtotal",p.getPrecio());
-                out.print("nuevo");
+                out.print("nuevo, 1, 0");
             }
         } catch (IOException e) {
             System.err.println("Error al obtener la salida hacia el cliente");
@@ -151,6 +152,37 @@ public class ControladorCarro {
     }
 
     /**
+     * Mapeo para eliminar un producto del carro de la compra
+     * @param id id del producto a eliminar
+     */
+    @RequestMapping(value="/eliminarProducto", method = RequestMethod.POST)
+    public void eliminarProductoDelCarro(@RequestParam("id") String id,
+                                         HttpServletRequest request,
+                                         HttpServletResponse response){
+        System.out.println("Me ha llegado peticion para eliminar un producto del carro de la compra");
+
+        try {
+            PrintWriter out = response.getWriter();
+            Producto p = rp.findById(id);
+            ArrayList<ProductoCarro> carroSesion = (ArrayList<ProductoCarro>) request.getSession().getAttribute("carroProductos");
+
+            int indiceProducto = indiceExistencia(carroSesion,p);
+            carroSesion.remove(indiceProducto);
+            int numProductos = numProductosCarro(carroSesion);
+            double subtotal = actualizarSubtotal(carroSesion);
+
+            request.getSession().setAttribute("carroProductos",carroSesion);
+            request.getSession().setAttribute("productosCarro",numProductos);
+            request.getSession().setAttribute("subtotal",subtotal);
+
+            out.print(subtotal+","+numProductos);
+
+        } catch (IOException e) {
+            System.err.println("Error al obtener la salida hacia el cliente");
+        }
+    }
+
+    /**
      * Si existe el producto p en la lista pc, se actualizan sus cantidades con 1 mas, sino se agrega con cantidad 1.
      * @param pc carro de productos
      * @param p producto a agregar
@@ -158,8 +190,9 @@ public class ControladorCarro {
      */
     private ArrayList<ProductoCarro> actualizar(ArrayList<ProductoCarro> pc, Producto p){
         ArrayList<ProductoCarro> pc2 = (ArrayList<ProductoCarro>) pc.clone();
-        if(indiceExistencia(pc,p) != -1){
-            pc2.get(indiceExistencia(pc,p)).setCantidadProducto(pc.get(indiceExistencia(pc,p)).getCantidadProducto() + 1);
+        int indice = indiceExistencia(pc,p);
+        if(indice != -1){
+            pc2.get(indice).setCantidadProducto(pc.get(indice).getCantidadProducto() + 1);
         } else{
             pc2.add(new ProductoCarro(p,1));
         }

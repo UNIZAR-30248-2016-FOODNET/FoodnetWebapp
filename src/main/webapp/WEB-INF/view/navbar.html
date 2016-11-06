@@ -83,25 +83,28 @@
                 <li>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         <span class="glyphicon glyphicon-shopping-cart"></span>
-                        <span id="numItems" th:if="${session.productosCarro!=null}" th:text="${session.productosCarro}">0</span>
-                        <span th:if="${session.productosCarro!=null}"> - Productos </span>
+
+                        <span th:if="${session.productosCarro!=null}" id="numItems" th:text="${session.productosCarro}">0</span>
                         <span th:if="${session.productosCarro==null}" id="numItems">0</span>
-                        <span th:if="${session.productosCarro==null}"> - Productos </span>
+                        <span> - Productos </span>
+
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu dropdown-cart" role="menu" id="carroCompra">
-                        <li th:each="itemCarro : ${session.carroProductos}">
+                        <li th:each="itemCarro, carroStat : ${session.carroProductos}" th:id="${'idProducto-' + carroStat.index}">
                             <span class="item">
                                 <span class="item-left">
-                                    <img src="http://placehold.it/50x50" th:src="${itemCarro.getProducto().getImagen()}" th:width="50" th:height="50" alt="" />
+                                    <img src="http://placehold.it/50x50" th:src="${itemCarro.getProducto().getImagen()}"
+                                         th:width="50" th:height="50" alt="" />
                                     <span class="item-info">
-                                    <span th:text="${itemCarro.getProducto().getNombre()}">Item name</span>
-                                    <span th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio(),0,2) + '€'}">€23</span>
+                                        <span th:text="${itemCarro.getProducto().getNombre()}">Item name</span>
+                                        <span th:id="${'idCantidadProductos-' + carroStat.index}" th:text = "${itemCarro.getCantidadProducto() + 'ud x '
+                                            + #numbers.formatDecimal(itemCarro.getProducto().getPrecio(),0,2) + '€/ud'}">23 €</span>
                                     </span>
                                 </span>
-                                <span class="item-right">
-                                    <button class="btn btn-xs btn-danger pull-right">x</button>
-                                </span>
+                                <button th:id="${'idBotonEliminar-' + carroStat.index}" class="btn btn-xs btn-danger pull-right"
+                                        th:onclick="'javascript:eliminarProducto(\'' + ${itemCarro.getProducto().getId()}
+                                        + ',' + ${carroStat.index} + '\');'">x</button>
                             </span>
                         </li>
                         <li class="divider"></li>
@@ -129,7 +132,8 @@
         var pathname = window.location.pathname;
         $('.nav > li > a[href="'+pathname+'"]').parent().addClass('active');
     });
-    var numProductos = document.getElementById('numItems').innerHTML;
+
+
     function aumentar(productoSinParsear){
         //parte navbar
         var productos = productoSinParsear.split(",");
@@ -137,37 +141,106 @@
         var precio = productos[1];
         var imagen = productos[2];
         var id = productos[3];
+
+        // actualizar cantidad de productos en el carro
+        var numProductos = document.getElementById('numItems').innerHTML;
         var textBox = document.getElementById("numItems");
         numProductos++;
         textBox.innerHTML = numProductos;
 
         //parte dropdown carro
-
-        //clonamos el boton de ver carro
-        var lista = document.getElementById('carroCompra'), verCarro = lista.lastElementChild;
-        var clonVer = verCarro.cloneNode(true);
-        var list = document.getElementById('carroCompra'), item = list.lastElementChild;
-        list.removeChild(item);
-
-        //clonamos el divider
-        var lista2 = document.getElementById('carroCompra'), divider = lista2.lastElementChild;
-        var clonDivider = divider.cloneNode(true);
-        var list2 = document.getElementById('carroCompra'), item2 = list2.lastElementChild;
-        list2.removeChild(item2);
-
         $.post("/addProductoCarro", {id:id}, function(result){
-            if(result.trim() != 'existe'){
-                $('#carroCompra').append('<li><span class="item"><span class="item-left">' +
+            var respuesta = result.split(",");
+            var operacion = respuesta[0].trim();
+            var nuevaCantidad = parseInt(respuesta[1].trim());
+            var posicionEnCarro = parseInt(respuesta[2].trim());
+            if(operacion != 'existe'){
+                //clonamos el boton de ver carro
+                var lista = document.getElementById('carroCompra'), verCarro = lista.lastElementChild;
+                var clonVer = verCarro.cloneNode(true);
+                var list = document.getElementById('carroCompra'), item = list.lastElementChild;
+                list.removeChild(item);
+
+                //clonamos el divider
+                var lista2 = document.getElementById('carroCompra'), divider = lista2.lastElementChild;
+                var clonDivider = divider.cloneNode(true);
+                var list2 = document.getElementById('carroCompra'), item2 = list2.lastElementChild;
+                list2.removeChild(item2);
+
+                $('#carroCompra').append('<li id="idProducto-' + posicionEnCarro + '"><span class="item"><span class="item-left">' +
                         '<img src="' + imagen + '" width="50" height="50" alt="" />' +
                         '<span class="item-info"> ' +
                         '<span>' + nombre + '</span> ' +
-                        '<span>' + parseFloat(precio).toFixed(2).replace(".", ",") + '€</span></span>' +
+                        '<span id="idCantidadProductos-' + posicionEnCarro + '">' + nuevaCantidad + 'ud x ' + parseFloat(precio).toFixed(2).replace(".", ",") + '€/ud</span></span>' +
                         '</span>' +
                         '<span class="item-right"> ' +
-                        '<button class="btn btn-xs btn-danger pull-right">x</button></span></span></li>');
+                        '<button id="idBotonEliminar-' + posicionEnCarro + '" class="btn btn-xs btn-danger pull-right" ' +
+                        'onclick="eliminarProducto(\'' + id + ',' + posicionEnCarro + '\');">x</button></span></span></li>');
+
+                document.getElementById("carroCompra").appendChild(clonDivider);
+                document.getElementById("carroCompra").appendChild(clonVer);
+            } else {
+                document.getElementById('idCantidadProductos-' + posicionEnCarro).innerHTML
+                        = '<span>' + nuevaCantidad + 'ud x ' + parseFloat(precio).toFixed(2).replace(".", ",") + '€/ud</span>';
             }
-            document.getElementById("carroCompra").appendChild(clonDivider);
-            document.getElementById("carroCompra").appendChild(clonVer);
+        });
+    }
+
+    function eliminarProducto(productoSinParsear){
+        //parte navbar
+        var producto = productoSinParsear.split(",");
+        var id = producto[0].trim();
+        var indice = producto[1].trim();
+
+        $.post("/eliminarProducto", {id:id}, function(result){
+            var resultParseado = result.split(",");
+            var subtotal = resultParseado[0];
+            var numProductos = resultParseado[1];
+
+            var textBox = document.getElementById("numItems");
+            textBox.innerHTML = numProductos;
+
+            var productoEliminar = document.getElementById("idProducto-"+indice);
+            productoEliminar.remove();
+
+            // Variables a actualizar en caso de que se este en la ventana del carrito
+            var productoCarroEliminar = document.getElementById("idProductoCarro-"+indice);
+            if(productoCarroEliminar != null) {
+                productoCarroEliminar.remove();
+                //actualizar subtotal total
+                var subtotalTotal = parseFloat(subtotal).toFixed(2).replace(".", ",") + '€';
+                document.getElementById('idSubtotal').innerHTML=subtotalTotal;
+                //actualizar total
+                var total = parseFloat(parseFloat(subtotal)+6.9).toFixed(2).replace(".", ",") + '€';
+                document.getElementById('idTotal').innerHTML=total;
+            }
+
+            //Se actualizan los identificadores para evitar inconsistencias
+            var listaProductos = document.getElementById("carroCompra");
+            var productos = listaProductos.getElementsByTagName("li");
+            for(var i = 0; i < productos.length; i++) {
+                var identificador = productos[i].id.split("-");
+                var num = identificador[1];
+                if(num > indice) {
+                    // Se modifica la id de la fila del producto
+                    var idProductoAntigua = document.getElementById('idProducto-'+num);
+                    idProductoAntigua.id = 'idProducto-'+(num-1);
+                    // Se modifica la id de la cantidad del producto
+                    var idCantidadAntigua = document.getElementById('idCantidadProductos-'+num);
+                    idCantidadAntigua.id = 'idCantidadProductos-'+(num-1);
+                    // Se modifica la funcion javascript que invocada para eliminar el producto
+                    var boton = document.getElementById('idBotonEliminar-' + num);
+                    var valorOnClickButton = boton.getAttribute('onclick');
+                    var start_pos = valorOnClickButton.indexOf('\'') + 1;
+                    var end_pos = valorOnClickButton.indexOf(',',start_pos);
+                    var identificadorProductoBoton = valorOnClickButton.substring(start_pos,end_pos);
+
+                    boton.setAttribute('onclick', 'eliminarProducto(\'' + identificadorProductoBoton + ',' + (num-1) + '\');');
+                    boton.id = 'idBotonEliminar-' + (num-1);
+
+                }
+            }
+
         });
     }
 </script>
