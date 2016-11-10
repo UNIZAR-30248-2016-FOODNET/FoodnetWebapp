@@ -26,7 +26,7 @@
                         <th> </th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="carroCompraPagCarro">
                     <tr th:each="itemCarro,iterStat : ${session.carroProductos}" th:id="${'idProductoCarro-' + iterStat.index}">
                         <td class="col-sm-8 col-md-6">
                             <div class="media">
@@ -41,7 +41,7 @@
                         </td>
                         <td class="col-sm-1 col-md-1" style="text-align: center">
                             <input type="number" class="form-control"
-                                   th:id="${'idCantidad-' + iterStat.index}"
+                                   th:id="${'idCantidadProductoCarro-' + iterStat.index}"
                                    th:value="${itemCarro.getCantidadProducto()}"
                                    th:oninput="'javascript:actualizarCantidadesProducto(\'' + ${itemCarro.getProducto().getId()} +
                                     ',' + ${iterStat.index} +
@@ -59,7 +59,7 @@
                             <strong th:id="${'idSubtotal-' + iterStat.index}" th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio() * itemCarro.getCantidadProducto(),0,2)+ '€'}">€14.61</strong>
                         </td>
                         <td class="col-sm-1 col-md-1">
-                            <button th:id="${'idBotonEliminar-' + iterStat.index}" type="button" class="btn btn-danger"
+                            <button th:id="${'idBotonEliminarCarro-' + iterStat.index}" type="button" class="btn btn-danger"
                                     th:onclick="'javascript:eliminarProducto(\'' + ${itemCarro.getProducto().getId()}
                                         + ',' + ${iterStat.index} + '\');'">
                                 <span class="glyphicon glyphicon-remove"></span> Eliminar
