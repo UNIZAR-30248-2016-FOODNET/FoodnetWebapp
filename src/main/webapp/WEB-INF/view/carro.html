@@ -120,8 +120,7 @@
         var indice = elementosParseados[1];
         var precioIndividual = elementosParseados[2];
 
-        var cantidadNueva=document.getElementById('idCantidad-'+indice).value;
-
+        var cantidadNueva=document.getElementById('idCantidadProductoCarro-'+indice).value;
         //actualizar subtotal producto
         var subtotalProducto = (precioIndividual * cantidadNueva).toFixed(2).replace(".", ",") + '€';
         document.getElementById('idSubtotal-'+indice).innerHTML=subtotalProducto;
