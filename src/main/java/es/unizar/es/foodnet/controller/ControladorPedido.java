@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by jorge on 31/10/2016.
- */
 @Controller
 public class ControladorPedido {
 

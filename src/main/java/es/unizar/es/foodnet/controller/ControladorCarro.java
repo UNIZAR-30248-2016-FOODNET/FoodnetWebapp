@@ -80,7 +80,7 @@ public class ControladorCarro {
      * @param id id del producto a agregar
      */
     @RequestMapping(value="/addProductoCarro", method = RequestMethod.POST)
-    public void addProductoCarro(@RequestParam("id")String id,
+    public void anadirProductoCarro(@RequestParam("id")String id,
                                  HttpServletRequest request,
                                  HttpServletResponse response){
         System.out.println("Me ha llegado peticion para agregar un nuevo producto al carro de la compra");

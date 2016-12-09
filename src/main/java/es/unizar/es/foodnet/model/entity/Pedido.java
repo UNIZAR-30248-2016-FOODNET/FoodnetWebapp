@@ -18,8 +18,12 @@ public class Pedido {
     private Usuario usuario;
 
     private Date fecha;
-    private List<ProductoCarro> productos;
     private double cost;
+    private String estado;
+    private List<ProductoCarro> productos;
+    public static final String PEDIDO_REALIZADO = "REALIZADO";
+    public static final String PEDIDO_EN_CURSO = "ENCURSO";
+    public static final String PEDIDO_CANCELADO = "CANCELADO";
 
 
     public Pedido(){}
@@ -29,8 +33,11 @@ public class Pedido {
         fecha=d;
         productos = l;
         cost = 6.9;
-        for(ProductoCarro p: productos){
-            cost+=p.getCantidadProducto()*p.getProducto().getPrecio();
+        estado = PEDIDO_REALIZADO;
+        if(l != null) {
+            for (ProductoCarro p : productos) {
+                cost += p.getCantidadProducto() * p.getProducto().getPrecio();
+            }
         }
     }
 
@@ -56,9 +63,30 @@ public class Pedido {
         return cost;
     }
 
-    public String getIdPedido() {
+    public String getTimestamp() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         return dateFormat.format(fecha);
     }
 
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Devuelve el estado de un pedido, que puede ser:
+     * R
+     * @return
+     */
+    public String getEstado() {
+        return estado;
+    }
+
+    public boolean cancelarPedido() {
+        if(estado.equalsIgnoreCase(PEDIDO_EN_CURSO) || estado.equalsIgnoreCase(PEDIDO_CANCELADO))
+            return false;
+
+        estado = PEDIDO_CANCELADO;
+        return true;
+
+    }
 }
