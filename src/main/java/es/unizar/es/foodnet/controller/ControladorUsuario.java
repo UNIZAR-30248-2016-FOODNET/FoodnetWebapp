@@ -17,6 +17,10 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+/**
+ * Controlador encargado de aquello relacionado con los usuarios
+ */
+
 @Controller
 public class ControladorUsuario {
 
@@ -96,7 +100,6 @@ public class ControladorUsuario {
                 if(pw.isPasswordValid(password,user.getPassword())){
                     System.out.println("Password valida, redirigiendo a catalogo");
                     request.getSession().setAttribute("user", user);
-                    model.addAttribute("currentUser",user);
                     return "redirect:/";
                 } else{
                     System.out.println("Password no valida");

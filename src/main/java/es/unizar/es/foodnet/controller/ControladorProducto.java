@@ -46,9 +46,9 @@ public class ControladorProducto {
                 ordenarPrecioMayorMenor(listProductos);
             } else if (tipoOrdenacion.trim().equals("nombremayormenor")) {
                 ordenarNombreMayorMenor(listProductos);
-            } else {
-                ordenarNombreMenorMayor(listProductos);
             }
+        } else{
+            ordenarNombreMenorMayor(listProductos);
         }
 
         model.addAttribute("listaProductos", listProductos);

@@ -22,7 +22,7 @@ public class Pedido {
     private String estado;
     private List<ProductoCarro> productos;
     public static final String PEDIDO_REALIZADO = "REALIZADO";
-    public static final String PEDIDO_EN_CURSO = "ENCURSO";
+    public static final String PEDIDO_EN_CURSO = "EN CURSO";
     public static final String PEDIDO_CANCELADO = "CANCELADO";
 
 
