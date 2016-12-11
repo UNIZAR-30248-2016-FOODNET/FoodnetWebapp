@@ -3,10 +3,8 @@ package es.unizar.es.foodnet.model;
 import es.unizar.es.foodnet.controller.ControladorCarro;
 import es.unizar.es.foodnet.controller.ControladorPedido;
 import es.unizar.es.foodnet.controller.ControladorUsuario;
-import es.unizar.es.foodnet.model.entity.Pedido;
-import es.unizar.es.foodnet.model.entity.Usuario;
-import es.unizar.es.foodnet.model.repository.RepositorioProducto;
-import es.unizar.es.foodnet.model.repository.RepositorioUsuario;
+import es.unizar.es.foodnet.model.entity.*;
+import es.unizar.es.foodnet.model.repository.*;
 import es.unizar.es.foodnet.model.service.ProductoCarro;
 import org.junit.After;
 import org.junit.Before;
@@ -16,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -24,39 +23,63 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
+@TestPropertySource("/application-test.properties")
 @SpringBootTest
 public class PedidoTest {
 
-    @Autowired RepositorioProducto repositorioProducto;
-    @Autowired RepositorioUsuario repositorioUsuario;
-    @Autowired ControladorPedido cp;
-    @Autowired ControladorCarro cc;
-    @Autowired ControladorUsuario cu;
+    @Autowired
+    private RepositorioPedido repositorioPedido;
+    @Autowired
+    private RepositorioSupermercado repositorioSupermercado;
+    @Autowired
+    private RepositorioCategoria repositorioCategoria;
+    @Autowired
+    private RepositorioProducto repositorioProducto;
+    @Autowired
+    private RepositorioUsuario repositorioUsuario;
+    @Autowired
+    private ControladorPedido cp;
+    @Autowired
+    private ControladorCarro cc;
+    @Autowired
+    private ControladorUsuario cu;
 
-    private Usuario user;
-    private ArrayList<ProductoCarro> carroProductos;
+    private static Usuario user;
+    private static boolean inicializado;
+    private static int testCompletados;
+    private static ArrayList<ProductoCarro> carroProductos;
 
     @Before
     public void beforeTestClass() {
-        user = repositorioUsuario.findByEmail("testPedidos@gmail.com");
-        if (user == null) {
+        if (!inicializado) {
+            repositorioPedido.deleteAll();
+            repositorioUsuario.deleteAll();
+            repositorioProducto.deleteAll();
+            repositorioCategoria.deleteAll();
+            repositorioSupermercado.deleteAll();
+            inicializado = true;
+
             user = new Usuario("test", "pedidos", "testPedidos@gmail.com", "pedidos", "zaragoza");
             cu.registrarUsuario(user, Mockito.mock(RedirectAttributes.class));
+
+            Categoria categoria = new Categoria("Lacteos");
+            Supermercado supermercado = new Supermercado("supermercado1");
+            repositorioCategoria.save(categoria);
+            repositorioSupermercado.save(supermercado);
+            repositorioProducto.save(new Producto(categoria, supermercado, "Yogurt", 0.80, "http://placehold.it/650x450"));
+
+            carroProductos = new ArrayList<>();
+            carroProductos.add(new ProductoCarro(repositorioProducto.findByNombre("Yogurt"), 1));
         }
-        carroProductos = new ArrayList<>();
-        carroProductos.add(new ProductoCarro(repositorioProducto.findByNombre("Yogurt"), 1));
     }
 
     @After
-    public void afterTestClass() {
-        if(user != null){
-            repositorioUsuario.delete(user);
-            user = null;
+    public void finalizar () {
+        if (testCompletados >= 5) {
+            inicializado = false;
         }
     }
 
@@ -65,6 +88,7 @@ public class PedidoTest {
      */
     @Test
     public void noExistenPedidos () {
+        testCompletados++;
         MockHttpServletRequest request = new MockHttpServletRequest();
         ExtendedModelMap model = new ExtendedModelMap();
         request.getSession().setAttribute("user", user);
@@ -77,6 +101,7 @@ public class PedidoTest {
      */
     @Test
     public void addPedido () {
+        testCompletados++;
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.getSession().setAttribute("user", user);
         request.getSession().setAttribute("carroProductos", carroProductos);
@@ -93,6 +118,7 @@ public class PedidoTest {
      */
     @Test
     public void cargarPedidosTest () {
+        testCompletados++;
         MockHttpServletRequest request = new MockHttpServletRequest();
         ExtendedModelMap model = new ExtendedModelMap();
         request.getSession().setAttribute("user", user);
@@ -111,6 +137,7 @@ public class PedidoTest {
      */
     @Test
     public void comprobarEstadoPedidoCreado() {
+        testCompletados++;
         Pedido pedido = new Pedido(user, Calendar.getInstance().getTime(), carroProductos);
         assertEquals(pedido.getEstado(), Pedido.PEDIDO_REALIZADO);
     }
@@ -121,6 +148,7 @@ public class PedidoTest {
      */
     @Test
     public void cancelarPedido() {
+        testCompletados++;
         Pedido pedido = new Pedido(user, Calendar.getInstance().getTime(), carroProductos);
         assertTrue(pedido.cancelarPedido());
         assertEquals(pedido.getEstado(), Pedido.PEDIDO_CANCELADO);

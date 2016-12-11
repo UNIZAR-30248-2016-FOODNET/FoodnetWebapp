@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -18,12 +19,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
+@TestPropertySource("/application-test.properties")
 @SpringBootTest
 public class SupermercadoTest {
 
     @Autowired
     private RepositorioSupermercado repositorioSupermercado;
-    private int cantidad;
+
+    private static int cantidad;
+    private static boolean inicializado;
+    private static int testCompletados;
 
     /**
      * Guarda los supermercados necesarios para realizar las pruebas y calcula
@@ -31,24 +36,23 @@ public class SupermercadoTest {
      */
     @Before
     public void inicializar () {
-        this.cantidad = repositorioSupermercado.findAll().size();
-        repositorioSupermercado.save(new Supermercado("supermercado2"));
-        repositorioSupermercado.save(new Supermercado("supermercado4"));
-        repositorioSupermercado.save(new Supermercado("supermercado1"));
-        this.cantidad += 3;
+        if (!inicializado) {
+            repositorioSupermercado.deleteAll();
+            inicializado = true;
+            testCompletados = 0;
+
+            repositorioSupermercado.save(new Supermercado("supermercado2"));
+            repositorioSupermercado.save(new Supermercado("supermercado4"));
+            repositorioSupermercado.save(new Supermercado("supermercado1"));
+            cantidad = 3;
+        }
     }
 
-    /**
-     * Borra las categorias utilizadas para las pruebas.
-     */
     @After
     public void finalizar () {
-        Supermercado s2 = repositorioSupermercado.findByNombre("supermercado2");
-        Supermercado s4 = repositorioSupermercado.findByNombre("supermercado4");
-        Supermercado s1 = repositorioSupermercado.findByNombre("supermercado1");
-        repositorioSupermercado.delete(s2);
-        repositorioSupermercado.delete(s1);
-        repositorioSupermercado.delete(s4);
+        if (testCompletados >= 5) {
+            inicializado = false;
+        }
     }
 
     /**
@@ -56,6 +60,7 @@ public class SupermercadoTest {
      */
     @Test
     public void repoNotNull(){
+        testCompletados++;
         assertNotNull(repositorioSupermercado);
     }
 
@@ -66,9 +71,10 @@ public class SupermercadoTest {
      */
     @Test
     public void findAllTest () {
+        testCompletados++;
         List<Supermercado> lista = repositorioSupermercado.findAll();
 
-        assertEquals(this.cantidad, lista.size());
+        assertEquals(cantidad, lista.size());
     }
 
     /**
@@ -77,6 +83,7 @@ public class SupermercadoTest {
      */
     @Test (expected = DuplicateKeyException.class)
     public void registrarCategoriaExistente(){
+        testCompletados++;
         Supermercado sup = new Supermercado("supermercadoDuplicado");
         Supermercado sup2 = new Supermercado("supermercadoDuplicado");
         repositorioSupermercado.save(sup);
@@ -89,6 +96,7 @@ public class SupermercadoTest {
      */
     @Test
     public void findByNombreEncontrado () {
+        testCompletados++;
         assertEquals(repositorioSupermercado.findByNombre("supermercado1").getNombre(), "supermercado1");
     }
 
@@ -98,6 +106,7 @@ public class SupermercadoTest {
      */
     @Test
     public void findByNombreNoEncontrado () {
+        testCompletados++;
         assertNull(repositorioSupermercado.findByNombre("supermercado3"));
     }
 }
