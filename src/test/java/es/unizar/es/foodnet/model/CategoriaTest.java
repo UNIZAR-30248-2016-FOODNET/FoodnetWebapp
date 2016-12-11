@@ -2,6 +2,7 @@ package es.unizar.es.foodnet.model;
 
 import es.unizar.es.foodnet.model.entity.Categoria;
 import es.unizar.es.foodnet.model.repository.RepositorioCategoria;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ public class CategoriaTest {
 
     private static int cantidad;
     private static boolean inicializado;
+    private static int testCompletados;
 
     /**
      * Inicializa las categorias añadiendo las necesarias
@@ -36,12 +38,19 @@ public class CategoriaTest {
         if (!inicializado) {
             repositorioCategoria.deleteAll();
             inicializado = true;
+            testCompletados = 0;
 
-            cantidad = repositorioCategoria.findAll().size();
             repositorioCategoria.save(new Categoria("categoria2"));
             repositorioCategoria.save(new Categoria("categoria4"));
             repositorioCategoria.save(new Categoria("categoria1"));
             cantidad += 3;
+        }
+    }
+
+    @After
+    public void finalizar () {
+        if (testCompletados >= 5) {
+            inicializado = false;
         }
     }
 
@@ -50,6 +59,7 @@ public class CategoriaTest {
      */
     @Test
     public void repoNotNull(){
+        testCompletados++;
         assertNotNull(repositorioCategoria);
     }
 
@@ -59,6 +69,7 @@ public class CategoriaTest {
      */
     @Test
     public void findAllTest () {
+        testCompletados++;
         List<Categoria> lista = repositorioCategoria.findAll();
         assertEquals(cantidad, lista.size());
     }
@@ -69,6 +80,7 @@ public class CategoriaTest {
      */
     @Test (expected = DuplicateKeyException.class)
     public void registrarCategoriaExistente(){
+        testCompletados++;
         Categoria categoria = new Categoria("categoriaDuplicada");
         Categoria categoria2 = new Categoria("categoriaDuplicada");
         repositorioCategoria.save(categoria);
@@ -81,6 +93,7 @@ public class CategoriaTest {
      */
     @Test
     public void findByNombreEncontrado () {
+        testCompletados++;
         assertEquals(repositorioCategoria.findByNombre("categoria1").getNombre(),"categoria1");
     }
 
@@ -90,6 +103,7 @@ public class CategoriaTest {
      */
     @Test
     public void findByNombreNoEncontrado () {
+        testCompletados++;
         assertNull(repositorioCategoria.findByNombre("categoria3"));
     }
 }

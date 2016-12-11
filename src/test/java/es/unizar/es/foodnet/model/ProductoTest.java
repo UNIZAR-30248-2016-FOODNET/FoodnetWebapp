@@ -6,6 +6,7 @@ import es.unizar.es.foodnet.model.entity.Supermercado;
 import es.unizar.es.foodnet.model.repository.RepositorioCategoria;
 import es.unizar.es.foodnet.model.repository.RepositorioProducto;
 import es.unizar.es.foodnet.model.repository.RepositorioSupermercado;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +35,7 @@ public class ProductoTest {
 
     private static int cantidad;
     private static boolean inicializado;
+    private static int testCompletados;
 
     /**
      * Elimina los productos que hay inicialmente en la base de datos, junto a sus categorias
@@ -60,11 +62,19 @@ public class ProductoTest {
         }
     }
 
+    @After
+    public void finalizar () {
+        if (testCompletados >= 4) {
+            inicializado = false;
+        }
+    }
+
     /**
      * Test para comprobar que la inyeccion de campos se ha realizado de manera correcta
      */
     @Test
     public void repoNotNull(){
+        testCompletados++;
         assertNotNull(repositorioCategoria);
         assertNotNull(repositorioProducto);
         assertNotNull(repositorioSupermercado);
@@ -77,6 +87,7 @@ public class ProductoTest {
      */
     @Test
     public void findAllTest () {
+        testCompletados++;
         List<Producto> lista = repositorioProducto.findAll();
 
         assertEquals(cantidad, lista.size());
@@ -88,6 +99,7 @@ public class ProductoTest {
      */
     @Test
     public void findByNombreEncontrado () {
+        testCompletados++;
         Producto producto = repositorioProducto.findByNombre("producto1");
         assertEquals(producto.getNombre(), "producto1");
         assertEquals(producto.getCategoria().getNombre(), "categoria1");
@@ -100,6 +112,7 @@ public class ProductoTest {
      */
     @Test
     public void findByNombreNoEncontrado () {
+        testCompletados++;
         assertNull(repositorioProducto.findByNombre("producto2"));
     }
 }

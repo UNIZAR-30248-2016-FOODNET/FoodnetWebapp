@@ -2,6 +2,7 @@ package es.unizar.es.foodnet.model;
 
 import es.unizar.es.foodnet.model.entity.Supermercado;
 import es.unizar.es.foodnet.model.repository.RepositorioSupermercado;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ public class SupermercadoTest {
 
     private static int cantidad;
     private static boolean inicializado;
+    private static int testCompletados;
 
     /**
      * Guarda los supermercados necesarios para realizar las pruebas y calcula
@@ -37,12 +39,19 @@ public class SupermercadoTest {
         if (!inicializado) {
             repositorioSupermercado.deleteAll();
             inicializado = true;
+            testCompletados = 0;
 
-            cantidad = repositorioSupermercado.findAll().size();
             repositorioSupermercado.save(new Supermercado("supermercado2"));
             repositorioSupermercado.save(new Supermercado("supermercado4"));
             repositorioSupermercado.save(new Supermercado("supermercado1"));
             cantidad += 3;
+        }
+    }
+
+    @After
+    public void finalizar () {
+        if (testCompletados >= 5) {
+            inicializado = false;
         }
     }
 
@@ -51,6 +60,7 @@ public class SupermercadoTest {
      */
     @Test
     public void repoNotNull(){
+        testCompletados++;
         assertNotNull(repositorioSupermercado);
     }
 
@@ -61,6 +71,7 @@ public class SupermercadoTest {
      */
     @Test
     public void findAllTest () {
+        testCompletados++;
         List<Supermercado> lista = repositorioSupermercado.findAll();
 
         assertEquals(cantidad, lista.size());
@@ -72,6 +83,7 @@ public class SupermercadoTest {
      */
     @Test (expected = DuplicateKeyException.class)
     public void registrarCategoriaExistente(){
+        testCompletados++;
         Supermercado sup = new Supermercado("supermercadoDuplicado");
         Supermercado sup2 = new Supermercado("supermercadoDuplicado");
         repositorioSupermercado.save(sup);
@@ -84,6 +96,7 @@ public class SupermercadoTest {
      */
     @Test
     public void findByNombreEncontrado () {
+        testCompletados++;
         assertEquals(repositorioSupermercado.findByNombre("supermercado1").getNombre(), "supermercado1");
     }
 
@@ -93,6 +106,7 @@ public class SupermercadoTest {
      */
     @Test
     public void findByNombreNoEncontrado () {
+        testCompletados++;
         assertNull(repositorioSupermercado.findByNombre("supermercado3"));
     }
 }

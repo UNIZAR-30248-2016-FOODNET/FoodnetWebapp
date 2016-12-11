@@ -6,6 +6,7 @@ import es.unizar.es.foodnet.controller.ControladorUsuario;
 import es.unizar.es.foodnet.model.entity.*;
 import es.unizar.es.foodnet.model.repository.*;
 import es.unizar.es.foodnet.model.service.ProductoCarro;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +49,7 @@ public class PedidoTest {
 
     private static Usuario user;
     private static boolean inicializado;
+    private static int testCompletados;
     private static ArrayList<ProductoCarro> carroProductos;
 
     @Before
@@ -74,11 +76,19 @@ public class PedidoTest {
         }
     }
 
+    @After
+    public void finalizar () {
+        if (testCompletados >= 5) {
+            inicializado = false;
+        }
+    }
+
     /**
      * Test que comprueba que un nuevo usuario no debe devolver ningún pedido.
      */
     @Test
     public void noExistenPedidos () {
+        testCompletados++;
         MockHttpServletRequest request = new MockHttpServletRequest();
         ExtendedModelMap model = new ExtendedModelMap();
         request.getSession().setAttribute("user", user);
@@ -91,6 +101,7 @@ public class PedidoTest {
      */
     @Test
     public void addPedido () {
+        testCompletados++;
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.getSession().setAttribute("user", user);
         request.getSession().setAttribute("carroProductos", carroProductos);
@@ -107,6 +118,7 @@ public class PedidoTest {
      */
     @Test
     public void cargarPedidosTest () {
+        testCompletados++;
         MockHttpServletRequest request = new MockHttpServletRequest();
         ExtendedModelMap model = new ExtendedModelMap();
         request.getSession().setAttribute("user", user);
@@ -125,6 +137,7 @@ public class PedidoTest {
      */
     @Test
     public void comprobarEstadoPedidoCreado() {
+        testCompletados++;
         Pedido pedido = new Pedido(user, Calendar.getInstance().getTime(), carroProductos);
         assertEquals(pedido.getEstado(), Pedido.PEDIDO_REALIZADO);
     }
@@ -135,6 +148,7 @@ public class PedidoTest {
      */
     @Test
     public void cancelarPedido() {
+        testCompletados++;
         Pedido pedido = new Pedido(user, Calendar.getInstance().getTime(), carroProductos);
         assertTrue(pedido.cancelarPedido());
         assertEquals(pedido.getEstado(), Pedido.PEDIDO_CANCELADO);
