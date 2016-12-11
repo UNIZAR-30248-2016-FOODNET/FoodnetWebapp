@@ -4,7 +4,7 @@ import es.unizar.es.foodnet.controller.ControladorUsuario;
 import es.unizar.es.foodnet.model.entity.Usuario;
 import es.unizar.es.foodnet.model.repository.RepositorioUsuario;
 import es.unizar.es.foodnet.model.service.Password;
-import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
+@TestPropertySource("/application-test.properties")
 @SpringBootTest
 public class UsuarioTest {
 
@@ -34,13 +36,18 @@ public class UsuarioTest {
 	private ControladorUsuario cu;
 	@Autowired
 	WebApplicationContext context;
-	private Usuario user;
 
-	@After
-	public void borrarPepe(){
-		if(user != null){
-			repositorioUsuario.delete(user);
-			user = null;
+	private static Usuario user;
+	private static boolean inicializado;
+
+	@Before
+	public void inicializar () {
+		if (!inicializado) {
+			repositorioUsuario.deleteAll();
+			inicializado = true;
+
+			user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
+			cu.registrarUsuario(user, Mockito.mock(RedirectAttributes.class));
 		}
 	}
 
@@ -57,9 +64,10 @@ public class UsuarioTest {
 	 */
 	@Test
 	public void registrarUsuarioNuevo(){
-		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
-		cu.registrarUsuario(user, Mockito.mock(RedirectAttributes.class));
-		Usuario usuario = repositorioUsuario.findByEmail("pepe@gmail.com");
+		Usuario usuario = new Usuario("pedro", "Jiménez", "pedro@gmail.com", "Zaragoza-1", "zaragoza");
+		cu.registrarUsuario(usuario, Mockito.mock(RedirectAttributes.class));
+		usuario = repositorioUsuario.findByEmail("pedro@gmail.com");
+
 		assertNotNull(usuario);
 		assertNotNull(repositorioUsuario.findById(usuario.getId()));
 	}
@@ -78,10 +86,8 @@ public class UsuarioTest {
 	 */
 	@Test (expected = DuplicateKeyException.class)
 	public void registrarUsuarioExistente(){
-		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
-		cu.registrarUsuario(user, Mockito.mock(RedirectAttributes.class));
-		Usuario u2 = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
-		cu.registrarUsuario(u2, Mockito.mock(RedirectAttributes.class));
+		Usuario usuario = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
+		cu.registrarUsuario(usuario, Mockito.mock(RedirectAttributes.class));
 	}
 
 	/**
@@ -89,8 +95,6 @@ public class UsuarioTest {
 	 */
 	@Test
 	public void autenticarUsuario(){
-		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
-		cu.registrarUsuario(user, Mockito.mock(RedirectAttributes.class));
 		assertEquals("redirect:/",cu.autenticarUsuario("pepe@gmail.com","Zaragoza-1",
 				new MockHttpServletRequest(), new ExtendedModelMap(), Mockito.mock(RedirectAttributes.class)));
 		assertEquals("redirect:/panelLogin",cu.autenticarUsuario("pepe@gmail.com","falla",
@@ -120,10 +124,6 @@ public class UsuarioTest {
 	 */
 	@Test
 	public void comprobarEmailDuplicado() throws Exception {
-
-		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
-		cu.registrarUsuario(user, Mockito.mock(RedirectAttributes.class));
-
 		MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 		mockMvc.perform(post("/comprobarEmail").param("email", user.getEmail()))
 				.andExpect(status().isOk());
@@ -131,8 +131,6 @@ public class UsuarioTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		cu.comprobarEmailRegistro(user.getEmail(), response);
 		assertEquals("encontrado", response.getContentAsString().trim());
-
-
 	}
 
 	/**
@@ -141,25 +139,26 @@ public class UsuarioTest {
 	@Test
 	public void modificarDatosUsuario() {
 		Password pw = new Password();
-		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
-		cu.registrarUsuario(user, Mockito.mock(RedirectAttributes.class));
-		user.setNombre("pepe2");
-		user.setApellidos("Sanchez2");
-		user.setDireccion("Zaragoza-2");
-		user.setEmail("pepe2@pepe2@gmail.com");
-		user.setPassword("zaragozaaaa");
+		Usuario usuario = new Usuario("Señor", "Prueba", "senorPrueba@gmail.com", "Zaragoza-1", "zaragoza");
+		cu.registrarUsuario(usuario, Mockito.mock(RedirectAttributes.class));
+
+		usuario.setNombre("pepe2");
+		usuario.setApellidos("Sanchez2");
+		usuario.setDireccion("Zaragoza-2");
+		usuario.setEmail("pepe2@gmail.com");
+		usuario.setPassword("zaragozaaaa");
 
 		MockHttpServletRequest request = new MockHttpServletRequest();
-		request.getSession().setAttribute("user",user);
-		cu.modificarDatosUsuario(user, request, Mockito.mock(RedirectAttributes.class));
+		request.getSession().setAttribute("user",usuario);
+		cu.modificarDatosUsuario(usuario, request, Mockito.mock(RedirectAttributes.class));
+		Usuario userRepo = repositorioUsuario.findById(usuario.getId());
 
-		Usuario userRepo = repositorioUsuario.findById(user.getId());
-		assertEquals(user.getNombre(), userRepo.getNombre());
-		assertEquals(user.getApellidos(), userRepo.getApellidos());
-		assertEquals(user.getDireccion(), userRepo.getDireccion());
-		assertEquals(user.getEmail(), userRepo.getEmail());
+		assertEquals(usuario.getNombre(), userRepo.getNombre());
+		assertEquals(usuario.getApellidos(), userRepo.getApellidos());
+		assertEquals(usuario.getDireccion(), userRepo.getDireccion());
+		assertEquals(usuario.getEmail(), userRepo.getEmail());
 		try {
-			if (pw.isPasswordValid(user.getPassword(), userRepo.getPassword())) {
+			if (pw.isPasswordValid(usuario.getPassword(), userRepo.getPassword())) {
 				assertTrue(true);
 			} else {
 				assertTrue(false);
@@ -175,16 +174,13 @@ public class UsuarioTest {
 	 */
 	@Test (expected = DuplicateKeyException.class)
 	public void modificarEmailAUnoExistente() {
-		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
-		cu.registrarUsuario(user, Mockito.mock(RedirectAttributes.class));
-
-		Usuario user2 = new Usuario("manolo", "Navarro", "manolo@gmail.com", "Zaragoza-2", "zaragoza");
-		cu.registrarUsuario(user2, Mockito.mock(RedirectAttributes.class));
-		user2.setEmail("pepe@gmail.com");
+		Usuario usuario = new Usuario("manolo", "Navarro", "manolo@gmail.com", "Zaragoza-2", "zaragoza");
+		cu.registrarUsuario(usuario, Mockito.mock(RedirectAttributes.class));
+		usuario.setEmail("pepe@gmail.com");
 
 		MockHttpServletRequest request = new MockHttpServletRequest();
-		request.getSession().setAttribute("user",user2);
-		cu.modificarDatosUsuario(user2,request, Mockito.mock(RedirectAttributes.class));
+		request.getSession().setAttribute("user",usuario);
+		cu.modificarDatosUsuario(usuario,request, Mockito.mock(RedirectAttributes.class));
 	}
 
 	/**
@@ -194,8 +190,6 @@ public class UsuarioTest {
 	 */
 	@Test
 	public void NoModificarPassword() {
-		user = new Usuario("pepe", "Sanchez", "pepe@gmail.com", "Zaragoza-1", "zaragoza");
-		cu.registrarUsuario(user, Mockito.mock(RedirectAttributes.class));
 		String passAntigua = repositorioUsuario.findById(user.getId()).getPassword();
 		user.setPassword("");
 

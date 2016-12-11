@@ -6,12 +6,12 @@ import es.unizar.es.foodnet.model.entity.Supermercado;
 import es.unizar.es.foodnet.model.repository.RepositorioCategoria;
 import es.unizar.es.foodnet.model.repository.RepositorioProducto;
 import es.unizar.es.foodnet.model.repository.RepositorioSupermercado;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
+@TestPropertySource("/application-test.properties")
 @SpringBootTest
 public class ProductoTest {
 
@@ -30,7 +31,9 @@ public class ProductoTest {
     private RepositorioSupermercado repositorioSupermercado;
     @Autowired
     private RepositorioProducto repositorioProducto;
-    private int cantidad;
+
+    private static int cantidad;
+    private static boolean inicializado;
 
     /**
      * Elimina los productos que hay inicialmente en la base de datos, junto a sus categorias
@@ -38,32 +41,23 @@ public class ProductoTest {
      */
     @Before
     public void inicializar () {
-        this.cantidad = repositorioProducto.findAll().size();
-        repositorioCategoria.save(new Categoria("categoria1"));
-        repositorioSupermercado.save(new Supermercado("supermercado1"));
+        if (!inicializado) {
+            repositorioProducto.deleteAll();
+            repositorioSupermercado.deleteAll();
+            repositorioCategoria.deleteAll();
+            inicializado = true;
 
-        Categoria categoria = repositorioCategoria.findByNombre("categoria1");
-        Supermercado supermercado = repositorioSupermercado.findByNombre("supermercado1");
+            cantidad = repositorioProducto.findAll().size();
+            repositorioCategoria.save(new Categoria("categoria1"));
+            repositorioSupermercado.save(new Supermercado("supermercado1"));
 
-        repositorioProducto.save(new Producto(categoria, supermercado, "producto1", 0.80, "http://placehold.it/650x450"));
-        repositorioProducto.save(new Producto(categoria, supermercado, "producto3", 10, "http://placehold.it/650x450"));
-        this.cantidad += 2;
-    }
+            Categoria categoria = repositorioCategoria.findByNombre("categoria1");
+            Supermercado supermercado = repositorioSupermercado.findByNombre("supermercado1");
 
-    /**
-     * Borra las categorias, supermercados y productos
-     * utilizados para las pruebas.
-     */
-    @After
-    public void finalizar () {
-        Producto p1 = repositorioProducto.findByNombre("producto1");
-        Producto p3 = repositorioProducto.findByNombre("producto3");
-        Categoria c1 = repositorioCategoria.findByNombre("categoria1");
-        Supermercado s1 = repositorioSupermercado.findByNombre("supermercado1");
-        repositorioProducto.delete(p1);
-        repositorioProducto.delete(p3);
-        repositorioCategoria.delete(c1);
-        repositorioSupermercado.delete(s1);
+            repositorioProducto.save(new Producto(categoria, supermercado, "producto1", 0.80, "http://placehold.it/650x450"));
+            repositorioProducto.save(new Producto(categoria, supermercado, "producto3", 10, "http://placehold.it/650x450"));
+            cantidad += 2;
+        }
     }
 
     /**
@@ -85,7 +79,7 @@ public class ProductoTest {
     public void findAllTest () {
         List<Producto> lista = repositorioProducto.findAll();
 
-        assertEquals(this.cantidad, lista.size());
+        assertEquals(cantidad, lista.size());
     }
 
     /**

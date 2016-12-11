@@ -2,13 +2,13 @@ package es.unizar.es.foodnet.model;
 
 import es.unizar.es.foodnet.model.entity.Categoria;
 import es.unizar.es.foodnet.model.repository.RepositorioCategoria;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -17,37 +17,32 @@ import static org.junit.Assert.*;
 
 
 @RunWith(SpringRunner.class)
+@TestPropertySource("/application-test.properties")
 @SpringBootTest
 public class CategoriaTest {
 
     @Autowired
     private RepositorioCategoria repositorioCategoria;
-    private int cantidad;
+
+    private static int cantidad;
+    private static boolean inicializado;
+
     /**
      * Inicializa las categorias añadiendo las necesarias
      * para realizar las pruebas
      */
     @Before
     public void inicializar () {
-        this.cantidad = repositorioCategoria.findAll().size();
-        repositorioCategoria.save(new Categoria("categoria2"));
-        repositorioCategoria.save(new Categoria("categoria4"));
-        repositorioCategoria.save(new Categoria("categoria1"));
-        this.cantidad += 3;
-    }
+        if (!inicializado) {
+            repositorioCategoria.deleteAll();
+            inicializado = true;
 
-    /**
-     * Borra las categorias utilizadas para las pruebas.
-     */
-    @After
-    public void finalizar () {
-        Categoria c2 = repositorioCategoria.findByNombre("categoria2");
-        Categoria c4 = repositorioCategoria.findByNombre("categoria4");
-        Categoria c1 = repositorioCategoria.findByNombre("categoria1");
-        repositorioCategoria.delete(c2);
-        repositorioCategoria.delete(c1);
-        repositorioCategoria.delete(c4);
-        this.cantidad-=3;
+            cantidad = repositorioCategoria.findAll().size();
+            repositorioCategoria.save(new Categoria("categoria2"));
+            repositorioCategoria.save(new Categoria("categoria4"));
+            repositorioCategoria.save(new Categoria("categoria1"));
+            cantidad += 3;
+        }
     }
 
     /**
@@ -65,7 +60,7 @@ public class CategoriaTest {
     @Test
     public void findAllTest () {
         List<Categoria> lista = repositorioCategoria.findAll();
-        assertEquals(this.cantidad, lista.size());
+        assertEquals(cantidad, lista.size());
     }
 
     /**
