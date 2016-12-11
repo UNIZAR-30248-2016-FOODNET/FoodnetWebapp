@@ -43,7 +43,7 @@ public class CategoriaTest {
             repositorioCategoria.save(new Categoria("categoria2"));
             repositorioCategoria.save(new Categoria("categoria4"));
             repositorioCategoria.save(new Categoria("categoria1"));
-            cantidad += 3;
+            cantidad = 3;
         }
     }
 

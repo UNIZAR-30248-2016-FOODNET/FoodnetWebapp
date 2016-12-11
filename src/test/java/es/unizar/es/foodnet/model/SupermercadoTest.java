@@ -44,7 +44,7 @@ public class SupermercadoTest {
             repositorioSupermercado.save(new Supermercado("supermercado2"));
             repositorioSupermercado.save(new Supermercado("supermercado4"));
             repositorioSupermercado.save(new Supermercado("supermercado1"));
-            cantidad += 3;
+            cantidad = 3;
         }
     }
 

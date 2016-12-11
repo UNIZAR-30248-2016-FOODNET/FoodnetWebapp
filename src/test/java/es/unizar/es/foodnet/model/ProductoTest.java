@@ -49,7 +49,6 @@ public class ProductoTest {
             repositorioCategoria.deleteAll();
             inicializado = true;
 
-            cantidad = repositorioProducto.findAll().size();
             repositorioCategoria.save(new Categoria("categoria1"));
             repositorioSupermercado.save(new Supermercado("supermercado1"));
 
@@ -58,7 +57,7 @@ public class ProductoTest {
 
             repositorioProducto.save(new Producto(categoria, supermercado, "producto1", 0.80, "http://placehold.it/650x450"));
             repositorioProducto.save(new Producto(categoria, supermercado, "producto3", 10, "http://placehold.it/650x450"));
-            cantidad += 2;
+            cantidad = 2;
         }
     }
 
