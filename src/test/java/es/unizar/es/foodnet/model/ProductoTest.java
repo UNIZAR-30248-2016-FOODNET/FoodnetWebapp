@@ -54,9 +54,10 @@ public class ProductoTest {
 
             Categoria categoria = repositorioCategoria.findByNombre("categoria1");
             Supermercado supermercado = repositorioSupermercado.findByNombre("supermercado1");
-
-            repositorioProducto.save(new Producto(categoria, supermercado, "producto1", 0.80, "http://placehold.it/650x450"));
-            repositorioProducto.save(new Producto(categoria, supermercado, "producto3", 10, "http://placehold.it/650x450"));
+            repositorioProducto.save(new Producto(categoria, supermercado, "producto1", 0.80,
+                    "http://placehold.it/650x450","Disfruta de la calidad de un producto a un precio razonable"));
+            repositorioProducto.save(new Producto(categoria, supermercado, "producto3", 10, "http://placehold.it/650x450",
+                    "El mismo producto pero mas caro."));
             cantidad = 2;
         }
     }
