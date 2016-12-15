@@ -22,12 +22,13 @@ public class Producto {
 
     //TODO: añadir campo descripcion al constructor cuando sea necesario
     public Producto(Categoria categoria, Supermercado supermercado, String nombre,
-                    double precio, String imagen) {
+                    double precio, String imagen, String descripcion) {
         this.categoria = categoria;
         this.supermercado = supermercado;
         this.nombre = nombre;
         this.precio = precio;
         this.imagen = imagen;
+        this.descripcion = descripcion;
     }
 
     public String getId() {

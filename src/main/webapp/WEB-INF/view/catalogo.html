@@ -38,26 +38,74 @@
                     </ul>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3" th:each="producto : ${listaProductos}">
-                    <div class="thumbnail">
-                        <h4 class="text-center"><span class="label label-info" th:text="${producto.getCategoria().getNombre()}">Categoría Producto</span></h4>
-                        <img src="http://placehold.it/650x450" th:src="${producto.getImagen()}" class="img-responsive">
+                    <div class="thumbnail" class="producto" data-toggle="modal" href="#myModal">
+                        <h4 class="text-center categoria"><span class="label label-info" th:text="${producto.getCategoria().getNombre()}">Categoría Producto</span></h4>
+                        <imagen><img src="http://placehold.it/650x450" th:src="${producto.getImagen()}" class="img-responsive"></imagen>
                         <div class="caption" style="text-align: center">
-                            <h4 th:text="${producto.getNombre()}">Nombre producto</h4>
-                            <h4>
+                            <h4 th:text="${producto.getNombre()}" class="nombre">Nombre producto</h4>
+                            <h4 th:text="${producto.getDescripcion()}" class="descripcion" hidden>Descripción del producto</h4>
+                            <h4 th:text="${producto.getSupermercado().getNombre()}" class="supermercado" hidden>Descripción del producto</h4>
+                            <h4 class="precio">
                                 <label th:text="${#numbers.formatDecimal(producto.getPrecio(),0,2) + '€'}">€123.45</label>
                             </h4>
-                            <a href="#" th:onclick="'javascript:aumentar(\'' + ${producto.getNombre()} +
+                            <boton><a href="#" th:onclick="'javascript:aumentar(\'' + ${producto.getNombre()} +
                              ',' + ${producto.getPrecio()} + ',' + ${producto.getImagen()} + ',' + ${producto.getId()} + '\');'"
                                class="btn btn-success btn-product">
                                 <span class="glyphicon glyphicon-shopping-cart"></span>Añadir al carro
-                            </a>
+                            </a></boton>
                             <p> </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row">
+			<!-- Modal -->
+			<div id="myModal" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h2 class="modal-title text-center"><div id="title"></div></h2>
+						</div>
+						<div class="modal-body">
+							<h3><div id="cat" class="text-center"></div></h3><br/>
+							<div id="image" class="text-center"></div>
+							<h4><div id="supermarket"></div></h4><br/>
+							<div id="desc" class="text-center"></div><br/><hr/>
+							<div id="price" class="text-center"></div>
+							<div id="button" class="text-center"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+        </div>
     </div>
 
 </body>
+<script>
+	$(function() {
+		$('.producto').click(function(e) {
+			var htmlString = $(this).find(".nombre").html();
+			$('#title').html(htmlString);
+			htmlString = $(this).find(".descripcion").html();
+			$('#desc').html(htmlString);
+			htmlString = $(this).find("imagen").html();
+			$('#image').html(htmlString);
+			htmlString = $(this).find(".categoria").html();
+			$('#cat').html(htmlString);
+			htmlString = $(this).find(".precio").html();
+			$('#price').html(htmlString);
+			htmlString = $(this).find("boton").html();
+			$('#button').html(htmlString);
+			htmlString = $(this).find(".supermercado").html();
+			$('#supermarket').html(htmlString);
+		});
+	});
+</script>
 </html>

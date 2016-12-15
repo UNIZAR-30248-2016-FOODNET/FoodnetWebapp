@@ -69,7 +69,7 @@ public class PedidoTest {
             Supermercado supermercado = new Supermercado("supermercado1");
             repositorioCategoria.save(categoria);
             repositorioSupermercado.save(supermercado);
-            repositorioProducto.save(new Producto(categoria, supermercado, "Yogurt", 0.80, "http://placehold.it/650x450"));
+            repositorioProducto.save(new Producto(categoria, supermercado, "Yogurt", 0.80, "http://placehold.it/650x450",""));
 
             carroProductos = new ArrayList<>();
             carroProductos.add(new ProductoCarro(repositorioProducto.findByNombre("Yogurt"), 1));
