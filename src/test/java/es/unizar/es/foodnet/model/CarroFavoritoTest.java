@@ -1,0 +1,128 @@
+package es.unizar.es.foodnet.model;
+
+import es.unizar.es.foodnet.controller.ControladorCarroFavorito;
+import es.unizar.es.foodnet.controller.ControladorUsuario;
+import es.unizar.es.foodnet.model.entity.*;
+import es.unizar.es.foodnet.model.repository.*;
+import es.unizar.es.foodnet.model.service.ProductoCarro;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+@RunWith(SpringRunner.class)
+@TestPropertySource("/application-test.properties")
+@SpringBootTest
+public class CarroFavoritoTest {
+
+    @Autowired
+    private RepositorioCarroFavorito repositorioCarroFavorito;
+    @Autowired
+    private RepositorioPedido repositorioPedido;
+    @Autowired
+    private RepositorioSupermercado repositorioSupermercado;
+    @Autowired
+    private RepositorioCategoria repositorioCategoria;
+    @Autowired
+    private RepositorioProducto repositorioProducto;
+    @Autowired
+    private RepositorioUsuario repositorioUsuario;
+    @Autowired
+    private ControladorUsuario cu;
+    @Autowired
+    private ControladorCarroFavorito ccf;
+
+    private static Usuario user;
+    private static ArrayList<ProductoCarro> carroProductos;
+
+    @Before
+    public void before(){
+        repositorioCarroFavorito.deleteAll();
+        repositorioPedido.deleteAll();
+        repositorioUsuario.deleteAll();
+        repositorioProducto.deleteAll();
+        repositorioCategoria.deleteAll();
+        repositorioSupermercado.deleteAll();
+
+        user = new Usuario("test", "pedidos", "testPedidos@gmail.com", "pedidos", "zaragoza");
+        cu.registrarUsuario(user, Mockito.mock(RedirectAttributes.class));
+
+        Categoria categoria = new Categoria("Lacteos");
+        Supermercado supermercado = new Supermercado("supermercado1");
+        repositorioCategoria.save(categoria);
+        repositorioSupermercado.save(supermercado);
+        repositorioProducto.save(new Producto(categoria, supermercado, "Yogurt", 0.80, "http://placehold.it/650x450",""));
+
+        carroProductos = new ArrayList<>();
+        carroProductos.add(new ProductoCarro(repositorioProducto.findByNombre("Yogurt"), 1));
+    }
+
+    @After
+    public void after(){
+
+    }
+
+    /**
+     * Test contra la BBDD de la creacion de un nuevo carro favorito
+     */
+    @Test
+    public void carroFavoritoNuevo(){
+        int numCarrosFavoritos = repositorioCarroFavorito.findAll().size();
+        CarroFavorito cf = new CarroFavorito("NombreCarro",user,carroProductos);
+        repositorioCarroFavorito.save(cf);
+
+        assertEquals(repositorioCarroFavorito.findAll().size(),numCarrosFavoritos+1);
+
+        CarroFavorito cf2 = repositorioCarroFavorito.findByNombre("NombreCarro");
+
+        assertNotNull(cf2);
+        assertEquals(cf2.getNombre(),cf.getNombre());
+        //No comprobamos item a item del carro, damos por hecho de que en esta sub-comprobacion si tiene el mismo
+        //numero de items, es la misma lista
+        assertEquals(cf2.getProductos().size(),cf.getProductos().size());
+        assertEquals(cf2.getUsuario().getEmail(),cf.getUsuario().getEmail());
+
+    }
+
+    /**
+     * Test contra la BBDD de intentar insertar un nuevo carro favorito con el mismo nombre que uno ya existente
+     */
+    @Test (expected = DuplicateKeyException.class)
+    public void carroFavoritoRepetido(){
+        CarroFavorito cf = new CarroFavorito("NombreCarro",user,carroProductos);
+        repositorioCarroFavorito.save(cf);
+
+        CarroFavorito cf2 = new CarroFavorito("NombreCarro",user,carroProductos);
+        repositorioCarroFavorito.save(cf2);
+    }
+
+    /**
+     * Test contra el controlador encargado de crear un nuevo carro favorito
+     */
+    @Test
+    public void carroFavoritoNuevoControlador(){
+        assertNull(repositorioCarroFavorito.findByNombre("NombreCarro"));
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession().setAttribute("user", user);
+        request.getSession().setAttribute("carroProductos", carroProductos);
+        request.getSession().setAttribute("nombreFavorito", "NombreCarro");
+        ccf.anadirCarroFavorito(request,Mockito.mock(RedirectAttributes.class));
+
+        assertNotNull(repositorioCarroFavorito.findByNombre("NombreCarro"));
+    }
+}
