@@ -3,10 +3,9 @@ package es.unizar.es.foodnet;
 import es.unizar.es.foodnet.model.entity.Categoria;
 import es.unizar.es.foodnet.model.entity.Producto;
 import es.unizar.es.foodnet.model.entity.Supermercado;
-import es.unizar.es.foodnet.model.repository.RepositorioCategoria;
-import es.unizar.es.foodnet.model.repository.RepositorioPedido;
-import es.unizar.es.foodnet.model.repository.RepositorioProducto;
-import es.unizar.es.foodnet.model.repository.RepositorioSupermercado;
+import es.unizar.es.foodnet.model.entity.Usuario;
+import es.unizar.es.foodnet.model.repository.*;
+import es.unizar.es.foodnet.model.service.Password;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 
@@ -22,14 +21,17 @@ public class FoodNetApplication implements CommandLineRunner {
 	private final RepositorioCategoria repositorioCategoria;
 	private final RepositorioSupermercado repositorioSupermercado;
 	private final RepositorioPedido repositorioPedido;
+	private final RepositorioUsuario repositorioUsuario;
 
 	@Autowired
 	public FoodNetApplication(RepositorioCategoria repositorioCategoria, RepositorioSupermercado repositorioSupermercado,
-							  RepositorioProducto repositorioProducto, RepositorioPedido repositorioPedido) {
+							  RepositorioProducto repositorioProducto, RepositorioPedido repositorioPedido,
+							  RepositorioUsuario repositorioUsuario) {
 		this.repositorioCategoria = repositorioCategoria;
 		this.repositorioSupermercado = repositorioSupermercado;
 		this.repositorioProducto = repositorioProducto;
 		this.repositorioPedido = repositorioPedido;
+		this.repositorioUsuario = repositorioUsuario;
 	}
 
 	public static void main(String[] args) {
@@ -41,5 +43,12 @@ public class FoodNetApplication implements CommandLineRunner {
 	 * aplicacion de Spring
      */
 	@Override
-	public void run(String... args) throws Exception {	}
+	public void run(String... args) throws Exception {
+		Usuario user = repositorioUsuario.findByEmail("admin@admin.com");
+		if(user == null){
+			Password p = new Password();
+			repositorioUsuario.save(new Usuario("Administrador","Foodnet","admin@admin.com",
+					p.generatePassword("admin"),"Direccion Admin",true));
+		}
+	}
 }

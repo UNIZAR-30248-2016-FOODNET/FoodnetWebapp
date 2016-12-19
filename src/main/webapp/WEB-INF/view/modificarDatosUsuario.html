@@ -26,7 +26,12 @@
                                 <form id="modify-form" action="/modificarDatos" method="post" role="form" modelAttribute="Usuario" style="display: block;">
                                     <div class="form-group">
                                         <label for="email">Email:</label>
-                                        <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email" th:value="${session.user.getEmail()}" required="required"/>
+                                        <input th:if="${session.user.isAdmin()}" type="email" name="email" id="email"
+                                               tabindex="1" class="form-control" placeholder="Email"
+                                               th:value="${session.user.getEmail()}" required="required" disabled/>
+                                        <input th:if="${!session.user.isAdmin()}" type="email" name="email" id="email"
+                                               tabindex="1" class="form-control" placeholder="Email"
+                                               th:value="${session.user.getEmail()}" required="required"/>
                                         <div class='validation' id="emailError" style='color:#ff0025;display:none;'>* El email introducido ya está en uso</div>
                                     </div>
                                     <div class="form-group">
