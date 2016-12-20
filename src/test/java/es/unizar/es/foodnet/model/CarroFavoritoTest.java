@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.ExtendedModelMap;
@@ -22,9 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource("/application-test.properties")
@@ -122,8 +121,7 @@ public class CarroFavoritoTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.getSession().setAttribute("user", user);
         request.getSession().setAttribute("carroProductos", carroProductos);
-        request.getSession().setAttribute("nombreFavorito", "NombreCarro");
-        ccf.anadirCarroFavorito(request,Mockito.mock(RedirectAttributes.class));
+        ccf.anadirCarroFavorito("NombreCarro", request, new MockHttpServletResponse());
 
         assertNotNull(repositorioCarroFavorito.findByNombre("NombreCarro"));
     }
@@ -158,7 +156,7 @@ public class CarroFavoritoTest {
 
         request.getSession().setAttribute("carroProductos", carroProductos);
 
-        ccf.anadirCarroFavorito(request,Mockito.mock(RedirectAttributes.class));
+        ccf.anadirCarroFavorito("NombreCarro", request, new MockHttpServletResponse());
 
         ccf.cargarFavoritos(model, request);
         assertEquals(favoritosInicial + 1, ((List<CarroFavorito>) model.get("carrosFavoritos")).size());
