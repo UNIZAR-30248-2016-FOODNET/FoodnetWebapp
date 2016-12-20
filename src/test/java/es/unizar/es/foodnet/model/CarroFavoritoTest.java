@@ -16,9 +16,11 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.ui.ExtendedModelMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -124,5 +126,41 @@ public class CarroFavoritoTest {
         ccf.anadirCarroFavorito(request,Mockito.mock(RedirectAttributes.class));
 
         assertNotNull(repositorioCarroFavorito.findByNombre("NombreCarro"));
+    }
+
+
+
+    /**
+     * Test que comprueba que un nuevo usuario no debe devolver ningún carroFavorito.
+     */
+    @Test
+    public void noExistenCarrosFavoritos () {
+        //testCompletados++;
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        ExtendedModelMap model = new ExtendedModelMap();
+        request.getSession().setAttribute("user", user);
+        ccf.cargarFavoritos(model,request);
+        assertEquals(0, ((List<CarroFavorito>) model.get("carrosFavoritos")).size());
+    }
+
+    /**
+     * Test que añade un carroFavorito y comprueba que ha aumentado el número de carros favoritos del
+     * del usuario.
+     */
+    @Test
+    public void cargarFavoritosTest () {
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        ExtendedModelMap model = new ExtendedModelMap();
+        request.getSession().setAttribute("user", user);
+        ccf.cargarFavoritos(model, request);
+        int favoritosInicial = ((List<CarroFavorito>) model.get("carrosFavoritos")).size();
+
+        request.getSession().setAttribute("carroProductos", carroProductos);
+
+        ccf.anadirCarroFavorito(request,Mockito.mock(RedirectAttributes.class));
+
+        ccf.cargarFavoritos(model, request);
+        assertEquals(favoritosInicial + 1, ((List<CarroFavorito>) model.get("carrosFavoritos")).size());
     }
 }

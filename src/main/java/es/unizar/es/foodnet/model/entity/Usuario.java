@@ -15,6 +15,8 @@ public class Usuario {
     private String password;
     private String direccion;
 
+    private boolean isAdmin;
+
     //Mandatory in spite of being useless
     public Usuario() {}
 
@@ -24,6 +26,16 @@ public class Usuario {
         this.email = email;
         this.password = password;
         this.direccion = direccion;
+        this.isAdmin = false;
+    }
+
+    public Usuario(String nombre, String apellidos, String email, String password, String direccion, boolean isAdmin) {
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.email = email;
+        this.password = password;
+        this.direccion = direccion;
+        this.isAdmin = isAdmin;
     }
 
     public String getNombre() {
@@ -70,6 +82,10 @@ public class Usuario {
         return id;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
@@ -77,8 +93,9 @@ public class Usuario {
                 ", nombre='" + nombre + '\'' +
                 ", apellidos='" + apellidos + '\'' +
                 ", email='" + email + '\'' +
-                ", contraseña='" + password + '\'' +
+                ", password='" + password + '\'' +
                 ", direccion='" + direccion + '\'' +
+                ", isAdmin=" + isAdmin +
                 '}';
     }
 }

@@ -77,6 +77,9 @@
                         </li>
                     </ul>
                 </li>
+                <li th:if="${session.user!=null && session.user.isAdmin()}" class="changeActive">
+                    <a href="/gestionarProductos">Gestionar productos</a>
+                </li>
                 <li th:if="${session.user!=null}" class="changeActive">
                     <a href="/historial">Historial de pedidos</a>
                 </li>
