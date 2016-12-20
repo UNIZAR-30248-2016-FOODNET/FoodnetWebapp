@@ -98,7 +98,14 @@
                     <tr>
                         <td>   </td>
                         <td>   </td>
-                        <td>   </td>
+                        <div th:if="${session.user==null}">
+                            <td>    </td>
+                        </div>
+                        <div th:if="${session.user!=null}">
+                            <td>
+                                <button id="favorito" class="btn btn-default"> Añadir carro a favoritos <span class="glyphicon glyphicon-heart"></span></button>
+                            </td>
+                        </div>
                         <td>
                             <a href="/" class="btn btn-default"><span class="glyphicon glyphicon-shopping-cart"></span> Seguir comprando</a>
                         </td>
@@ -142,5 +149,35 @@
                     = '<span>' + cantidadNueva + 'ud x ' + parseFloat(precioIndividual).toFixed(2).replace(".", ",") + '€/ud</span>';
         });
     }
+    $("#favorito").on("click", function() {
+        bootbox.prompt({
+            title: "Introduzca nombre para el carro: ",
+            inputType: 'text',
+            callback: function (result) {
+                if(result != null) {
+                    if(result.trim() != "") {
+                        $.post("/addFavorito", {name:result}, function (msg) {
+                            msg = msg.trim();
+                            if(msg == "ok") {
+                                bootbox.alert("Carro añadido correctamente a favoritos!").find('.modal-dialog').css({
+                                    'position': 'unset'
+                                });
+                            } else {
+                                bootbox.alert("ERROR: ya existe carro con ese nombre.").find('.modal-dialog').css({
+                                    'position': 'unset'
+                                });
+                            }
+                        });
+                    } else {
+                        bootbox.alert("ERROR: Introduzca un nombre válido.").find('.modal-dialog').css({
+                            'position': 'unset'
+                        });
+                    }
+                }
+            }
+        }).find('.modal-dialog').css({
+            'position': 'unset'
+        });
+    });
 </script>
 </html>
