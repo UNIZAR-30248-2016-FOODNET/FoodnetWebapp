@@ -28,7 +28,7 @@
                                         <label for="email">Email:</label>
                                         <input th:if="${session.user.isAdmin()}" type="email" name="email" id="email"
                                                tabindex="1" class="form-control" placeholder="Email"
-                                               th:value="${session.user.getEmail()}" required="required" disabled/>
+                                               th:value="${session.user.getEmail()}" required="required" readonly/>
                                         <input th:if="${!session.user.isAdmin()}" type="email" name="email" id="email"
                                                tabindex="1" class="form-control" placeholder="Email"
                                                th:value="${session.user.getEmail()}" required="required"/>
