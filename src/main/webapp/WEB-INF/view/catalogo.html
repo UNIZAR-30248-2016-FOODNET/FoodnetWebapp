@@ -7,105 +7,171 @@
     <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <title th:text="#{catalogo.pagina.titulo}">Catálogo de productos</title>
-</head>
+    <link rel="stylesheet"
+          href="http://www.samrayner.com/bootstrap-side-navbar/assets/stylesheets/application.css"/>
 
-<body>
+    <title th:text="#{catalogo.pagina.titulo}">Catálogo de productos</title>
+
     <style type="text/css">
         .btn-product{
             width: 90%;
         }
     </style>
 
+</head>
+<body>
+
     <div th:include="navbar"></div>
 
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <!-- Split button -->
-                <div class="btn-group col-md-12 col-sm-12 col-lg-12">
-                    <div class="btn-group col-md-3 col-sm-3 col-lg-3" style="padding-bottom: 20px">
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-primary">Ordenar por:</button>
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="/">Alfabético: de menor a mayor</a></li>
-                                <li><a href="/?ordenacion=nombremayormenor">Alfabético: de mayor a menor</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="/?ordenacion=preciomenormayor">Precio: de menor a mayor</a></li>
-                                <li><a href="/?ordenacion=preciomayormenor">Precio: de mayor a menor</a></li>
-                            </ul>
-                        </div>
+            <div class="col-lg-3 col-sm-3 col-md-3">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <nav class="navbar navbar-default navbar-fixed-side">
+                            <div class="container">
+                                <div class="navbar-header">
+                                    <button class="navbar-toggle" data-target="#navbarCatalogo" data-toggle="collapse">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                    <h4 style="text-align: center;"><strong>Preferencias</strong></h4>
+                                </div>
+                                <div class="collapse navbar-collapse" id="navbarCatalogo">
+                                    <ul class="nav navbar-nav">
+                                        <li class="dropdown">
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <h5><strong style="color: #4c4c4c">Por supermercado</strong></h5>
+                                                <b class="caret"></b>
+                                            </a>
+                                            <ul id="dropdownSupermercado" class="dropdown-menu">
+                                                <li th:each="supermercado : ${listaSupermercados}">
+                                                    <label style="margin-left: 15px; color: #777;">
+                                                        <input type="checkbox" name="supermercadoCheckbox"
+                                                              th:value="${supermercado.getNombre()}"
+                                                              th:id="${supermercado.getNombre()}"
+                                                              th:text="${supermercado.getNombre()}"/>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+
+                                    <ul class="nav navbar-nav">
+                                        <li class="dropdown">
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <h5><strong style="color: #4c4c4c">Por categoría</strong></h5>
+                                                <b class="caret"></b>
+                                            </a>
+                                            <ul id="dropdownCategoria" class="dropdown-menu">
+                                                <li th:each="categoria : ${listaCategorias}">
+                                                    <label style="margin-left: 15px; color: #777;">
+                                                        <input type="checkbox" name="categoriaCheckbox"
+                                                              th:value="${categoria.getNombre()}"
+                                                              th:id="${categoria.getNombre()}"
+                                                              th:text="${categoria.getNombre()}"/>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
                     </div>
-                    <div class="btn-group col-md-9 col-sm-9 col-lg-9" style="padding-bottom: 20px">
-                        <div class="input-group-btn">
-                            <input type="text" class="form-control" placeholder="Escribe el producto que quieres buscar..."
-                                   id="idTextoProducto" th:onkeyup="'javascript:busquedaDinamica();'">
+                </div>
+            </div>
+            <div class="col-lg-9 col-sm-9 col-md-9">
+                <div class="row">
+                    <div class="col-lg-10" style="padding-bottom: 20px">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary">Ordenar por:</button>
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/">Alfabético: de menor a mayor</a></li>
+                                    <li><a href="/?ordenacion=nombremayormenor">Alfabético: de mayor a menor</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="/?ordenacion=preciomenormayor">Precio: de menor a mayor</a></li>
+                                    <li><a href="/?ordenacion=preciomayormenor">Precio: de mayor a menor</a></li>
+                                </ul>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Producto a buscar..."
+                                   id="idTextoProducto" name="textoBusqueda">
+                            <!--th:onkeyup="'javascript:busquedaDinamica();'-->
                         </div>
                     </div>
                 </div>
-                <div id="idProductosCatalogo">
-                    <div th:id="${producto.getNombre() + '-' + iterStat.index}"
-                         class="col-sm-6 col-md-4 col-lg-3" th:each="producto, iterStat : ${listaProductos}">
-                        <div class="thumbnail producto" style="text-align: center">
-                            <div data-toggle="modal" href="#myModal">
-                                <h4 class="text-center categoria">
-                                    <span class="label label-info" th:text="${producto.getCategoria().getNombre()}">Categoría Producto</span>
-                                </h4>
-                                <imagen><img src="http://placehold.it/650x450" th:src="${producto.getImagen()}" th:width="650" th:height="450"  class="img-responsive"></imagen>
-                                <div class="caption">
-                                    <h4 th:text="${producto.getNombre()}" class="nombre">Nombre producto</h4>
-                                    <h4 th:text="${producto.getDescripcion()}" class="descripcion" hidden>Descripción del producto</h4>
-                                    <h4 th:text="${producto.getSupermercado().getNombre()}" class="supermercado" hidden>Descripción del producto</h4>
-                                    <h4 class="precio">
-                                        <label th:text="${#numbers.formatDecimal(producto.getPrecio(),0,2) + '€'}">€123.45</label>
-                                    </h4>
+                <div class="row">
+                    <div class="col-lg-10">
+                        <div id="idProductosCatalogo">
+
+                            <div th:id="${producto.getNombre() + '-' + iterStat}" style= "padding-right: 0.2cm;"
+                                 data-th-attr="sup=${producto.getSupermercado().getNombre()}, cat=${producto.getCategoria().getNombre()},
+                                 nom=${producto.getNombre()}" class="productoCatalogo col-lg-3 col-md-4 col-sm-6"
+                                 th:each="producto, iterStat : ${listaProductos}">
+
+                                <div class="thumbnail producto" style="text-align: center">
+                                    <div data-toggle="modal" href="#myModal">
+                                        <h4 class="text-center categoria">
+                                            <span class="label label-info" th:text="${producto.getCategoria().getNombre()}">Categoría Producto</span>
+                                        </h4>
+                                        <imagen><img src="http://placehold.it/650x450" th:src="${producto.getImagen()}" th:width="650" th:height="450"  class="img-responsive"></imagen>
+                                        <div class="caption">
+                                            <h4 th:text="${producto.getNombre()}" class="nombre">Nombre producto</h4>
+                                            <h4 th:text="${producto.getDescripcion()}" class="descripcion" hidden>Descripción del producto</h4>
+                                            <h4 th:text="${producto.getSupermercado().getNombre()}" class="supermercado" hidden>Descripción del producto</h4>
+                                            <h4 class="precio">
+                                                <label th:text="${#numbers.formatDecimal(producto.getPrecio(),0,2) + '€'}">€123.45</label>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-success btn-product">
+                                        <a href="#" th:onclick="'javascript:aumentar(\'' + ${producto.getNombre()} +
+                                             ',' + ${producto.getPrecio()} + ',' + ${producto.getImagen()} + ',' + ${producto.getId()} + '\');'"
+                                        style="color: white">
+                                            <span class="glyphicon glyphicon-shopping-cart"></span>
+                                            Añadir al carro
+                                        </a>
+                                    </button>
+                                    <p></p>
                                 </div>
                             </div>
-                            <boton><a href="#" th:onclick="'javascript:aumentar(\'' + ${producto.getNombre()} +
-                                 ',' + ${producto.getPrecio()} + ',' + ${producto.getImagen()} + ',' + ${producto.getId()} + '\');'"
-                                      class="btn btn-success btn-product">
-                                <span class="glyphicon glyphicon-shopping-cart"></span>
-                                Añadir al carro</a></boton>
-                            <p></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-			<!-- Modal -->
-			<div id="myModal" class="modal fade" role="dialog">
-				<div class="modal-dialog modal-sm">
-					<!-- Modal content-->
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h2 class="modal-title text-center">
-                                <div id="title"></div>
-                            </h2>
-						</div>
-						<div class="modal-body">
-							<h3>
-                                <div id="cat" class="text-center"></div>
-                            </h3><br/>
-							<div id="image" class="text-center" th:width="650" th:height="450"></div>
-							<h4>
-                                <span id="supermarket"></span>: <span id="price"></span>
-                            </h4><br/>
-							<div id="desc" class="text-center"></div><hr/>
-							<div id="button" class="text-center"></div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-						</div>
-					</div>
+    </div>
 
-				</div>
-			</div>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h2 id="title" class="modal-title text-center"></h2>
+                </div>
+                <div class="modal-body">
+                    <h3 class="text-center" id="cat"></h3>
+                    <br/>
+                    <div id="image" class="text-center" th:width="650" th:height="450"></div>
+                    <h4>
+                        <span id="supermarket"></span>: <span id="price"></span>
+                    </h4><br/>
+                    <div id="desc" class="text-center"></div>
+                    <hr/>
+                    <div id="button" class="text-center"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -130,22 +196,74 @@
 		});
 	});
 
-    function busquedaDinamica(){
-        var textoBusqueda=document.getElementById('idTextoProducto').value;
+    var $filterCheckboxes = $('input[type="checkbox"]');
+    var filtrarCheckboxes = function () {
 
-        var listaProductosCatalogo = document.getElementById("idProductosCatalogo");
-        var idProductosCatalogo = listaProductosCatalogo.getElementsByTagName("div");
-
-        for(var i = 0; i < idProductosCatalogo.length; i++) {
-            var id = idProductosCatalogo[i].id.split("-");
-            if (idProductosCatalogo[i].id != null && id.length >= 2) {
-                if (idProductosCatalogo[i].id.toLowerCase().indexOf(textoBusqueda.toLowerCase()) >= 0) {
-                    $(idProductosCatalogo[i]).show();
-                } else {
-                    $(idProductosCatalogo[i]).hide();
-                }
+        var selectedFilters = {};
+        var textoBusqueda = document.getElementById('idTextoProducto').value;
+        var hayCheckboxMarcados = false;
+        $filterCheckboxes.filter(':checked').each(function() {
+            hayCheckboxMarcados = true;
+            if (!selectedFilters.hasOwnProperty(this.name)) {
+                selectedFilters[this.name] = [];
             }
+            selectedFilters[this.name].push(this.value);
+        });
+
+        // obtiene todos los productos del catalogo que pueden ser filtrados
+        var $filteredResults = $('.productoCatalogo');
+
+        if(hayCheckboxMarcados) {
+            // Itera sobre todos los checkboxes marcados. Interesa filterValues
+            // que contiene el nombre del supermercado
+            $.each(selectedFilters, function (name, filterValues) {
+                // filtra cada producto del catalogo
+                $filteredResults = $filteredResults.filter(function () {
+
+                    var matchedCheckbox = false;
+                    var supermercado = $(this).attr('sup');
+                    var categoria = $(this).attr('cat');
+
+                    var currentFilterValues = [supermercado, categoria];
+
+                    $.each(currentFilterValues, function (_, currentFilterValue) {
+                        // Si coincide algun filtro marcado con los parametros del
+                        // producto, se pone a true, para de realizar el bucle y
+                        // lo deja listro para ocultarlo de la lista de productos
+                        if ($.inArray(currentFilterValue, filterValues) != -1) {
+                            matchedCheckbox = true;
+                        }
+                    });
+
+                    var nombre = $(this).attr('nom');
+                    var matchedName = false;
+                    if (nombre.toLowerCase().indexOf(textoBusqueda.toLowerCase()) >= 0)
+                        matchedName = true;
+
+                    // Si ha coincidido algun producto, se devuelve.
+                    return !!(matchedName && matchedCheckbox);
+                });
+            });
+            $('.productoCatalogo').hide().filter($filteredResults).show();
+
+        } else {
+            $filteredResults = $filteredResults.filter(function() {
+
+                var nombre = $(this).attr('nom');
+                var matchedName = false;
+
+                if(nombre.toLowerCase().indexOf(textoBusqueda.toLowerCase()) >= 0)
+                    matchedName = true;
+
+                // Si ha coincidido algun producto, se devuelve.
+                return matchedName
+            });
+            $('.productoCatalogo').hide().filter($filteredResults).show();
         }
-    }
+    };
+
+    $filterCheckboxes.on('change', filtrarCheckboxes);
+    $('#idTextoProducto').on('keyup', filtrarCheckboxes);
+
 </script>
 </html>
