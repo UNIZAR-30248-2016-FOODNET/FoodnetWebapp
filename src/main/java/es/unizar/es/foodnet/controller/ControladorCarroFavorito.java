@@ -72,13 +72,13 @@ public class ControladorCarroFavorito {
      * @param request request objeto request del usuario
      * @return pagina de carros favoritos
      */
-    @RequestMapping(value="/carrosFavoritos", method = RequestMethod.POST)
+    @RequestMapping(value="/carrosFavoritos")
     public String cargarFavoritos(Model model, HttpServletRequest request){
         System.out.println("Me ha llegado peticion para mostrar un carro favorito");
 
 
         List<CarroFavorito> listaFavoritos = repository.findAll();
-        List<CarroFavorito> carrosFavoritos = new ArrayList<CarroFavorito>();
+        List<CarroFavorito> carrosFavoritos = new ArrayList<>();
         Usuario u =(Usuario)request.getSession().getAttribute("user");
         for(CarroFavorito c :listaFavoritos){
             if (c.getUsuario().getEmail().equals(u.getEmail())){
