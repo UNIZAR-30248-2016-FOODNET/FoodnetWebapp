@@ -58,7 +58,7 @@
                                             <td th:text="${producto.getNombre()}"  style="vertical-align: middle">Nombre</td>
                                             <td th:text="${producto.getSupermercado().getNombre()}" style="vertical-align: middle">Supermercado</td>
                                             <td th:text="${producto.getCategoria().getNombre()}" style="vertical-align: middle">Categoria</td>
-                                            <td th:text="${#numbers.formatDecimal(producto.getPrecio(),0,2) + '€'}" style="vertical-align: middle">€123.45</td>
+                                            <td th:text="${#numbers.formatDecimal(producto.getPrecio(),1,2) + '€'}" style="vertical-align: middle">€123.45</td>
                                             <td style="vertical-align: middle">
                                                 <button class="btn btn-default btn-group-xs edit" th:id="edit_button + ${indice.index}"><span class="glyphicon glyphicon-pencil"></span></button>
                                                 <button class="btn btn-default btn-group-xs delete"><span class="glyphicon glyphicon-trash"></span></button>

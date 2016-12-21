@@ -66,13 +66,13 @@
                                         <td class="col-sm-5 col-md-4 text-center" th:text="${productoCarro.getProducto().getSupermercado().getNombre()}">
                                             Supermercado
                                         </td>
-                                        <td class="col-sm-3 col-md-3 text-center" th:text="${#numbers.formatDecimal(productoCarro.getProducto().getPrecio() * productoCarro.getCantidadProducto(),0,2) + '€'}">
+                                        <td class="col-sm-3 col-md-3 text-center" th:text="${#numbers.formatDecimal(productoCarro.getProducto().getPrecio() * productoCarro.getCantidadProducto(),1,2) + '€'}">
                                             Precio
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <strong th:text="${'Precio total (gastos incluídos): ' + #numbers.formatDecimal(pedido.getCost(),0,2)} + '€'">
+                                            <strong th:text="${'Precio total (gastos incluídos): ' + #numbers.formatDecimal(pedido.getCost(),1,2)} + '€'">
                                                 Coste
                                             </strong>
                                         </td>

@@ -102,7 +102,7 @@
                                     <span class="item-info">
                                         <span th:text="${itemCarro.getProducto().getNombre()}">Item name</span>
                                         <span th:id="${'idCantidadProductos-' + carroStat.index}" th:text = "${itemCarro.getCantidadProducto() + 'ud x '
-                                            + #numbers.formatDecimal(itemCarro.getProducto().getPrecio(),0,2) + '€/ud'}">23 €</span>
+                                            + #numbers.formatDecimal(itemCarro.getProducto().getPrecio(),1,2) + '€/ud'}">23 €</span>
                                     </span>
                                 </span>
                                 <button th:id="${'idBotonEliminar-' + carroStat.index}" class="btn btn-xs btn-danger pull-right"
@@ -216,28 +216,32 @@
                 //actualizar total
                 var total = parseFloat(parseFloat(subtotal)+6.9).toFixed(2).replace(".", ",") + '€';
                 document.getElementById('idTotal').innerHTML=total;
+
                 //Actualiza identificadores para evitar inconsistencias
                 var listaProductosCarro = document.getElementById("carroCompraPagCarro");
                 var productosCarro = listaProductosCarro.getElementsByTagName("tr");
-                for(var i = 0; i < productosCarro.length; i++) {
+
+                for(var i = 0; i < productosCarro.length-3; i++) {
                     if(productosCarro[i].id != null) {
                         var identificadorCarro = productosCarro[i].id.split("-");
                         var n = identificadorCarro[1];
-                        if (n > indice) {
+                        if (n > indice) { // Ejemplo: borro 1º, 2º pasa a ser 1º. Actualizar ids
                             // Se modifica la id de la fila del producto
                             var idProductoCarroAntigua = document.getElementById('idProductoCarro-' + n);
                             idProductoCarroAntigua.id = 'idProductoCarro-' + (n - 1);
                             // Se modifica la funcion javascript que invocada para eliminar el producto
                             var botonEliminarCarro = document.getElementById('idBotonEliminarCarro-' + n);
+                            botonEliminarCarro.id = 'idBotonEliminarCarro-' + (n - 1);
                             var valorOnClickButtonCarro = botonEliminarCarro.getAttribute('onclick');
                             var start_pos = valorOnClickButtonCarro.indexOf('\'') + 1;
                             var end_pos = valorOnClickButtonCarro.indexOf(',', start_pos);
                             var identificadorProductoBoton = valorOnClickButtonCarro.substring(start_pos, end_pos);
-                            botonEliminarCarro.setAttribute('onclick', 'eliminarProducto(\'' + identificadorProductoBoton + ',' + (n - 1) + '\');');
-                            botonEliminarCarro.id = 'idBotonEliminarCarro-' + (n - 1);
+                            botonEliminarCarro.setAttribute('onclick', 'eliminarProducto(\'' + identificadorProductoBoton + ',' + (n-1) + '\');');
+
 
                             // Se modifica la id de la cantidad del producto
                             var cantidadCarroAntigua = document.getElementById('idCantidadProductoCarro-' + n);
+                            cantidadCarroAntigua.id = 'idCantidadProductoCarro-' + (n-1);
                             var valorOnInputCantidadCarro = cantidadCarroAntigua.getAttribute('oninput');
                             // Recoge el valor del identificador del producto
                             start_pos = valorOnInputCantidadCarro.indexOf('\'') + 1;
@@ -249,10 +253,14 @@
                             var precioProductoCarro = valorOnInputCantidadCarro.substring(start_pos, end_pos);
 
                             cantidadCarroAntigua.setAttribute('oninput', 'actualizarCantidadesProducto(\''
-                                    + identificadorProductoBoton + ',' + (n - 1) + ',' + precioProductoCarro + '\');');
+                                    + identificadorProductoBoton + ',' + (n-1) + ',' + precioProductoCarro + '\');');
                             cantidadCarroAntigua.setAttribute('onchange', 'actualizarCantidadesProducto(\''
-                                    + identificadorProductoBoton + ',' + (n - 1) + ',' + precioProductoCarro + '\');');
-                            cantidadCarroAntigua.id = 'idCantidadProductoCarro-' + (n - 1);
+                                    + identificadorProductoBoton + ',' + (n-1) + ',' + precioProductoCarro + '\');');
+
+                            // Se modifica la id del subtotal del producto
+                            var idProductoCarroAntigua = document.getElementById('idSubtotal-' + n);
+                            idProductoCarroAntigua.id = 'idSubtotal-' + (n - 1);
+
                         }
                     }
                 }
@@ -273,13 +281,13 @@
                     idCantidadAntigua.id = 'idCantidadProductos-'+(num-1);
                     // Se modifica la funcion javascript que invocada para eliminar el producto
                     var boton = document.getElementById('idBotonEliminar-' + num);
+                    boton.id = 'idBotonEliminar-' + (num-1);
                     var valorOnClickButton = boton.getAttribute('onclick');
                     var start_pos_prod = valorOnClickButton.indexOf('\'') + 1;
                     var end_pos_prod = valorOnClickButton.indexOf(',',start_pos_prod);
                     var identificadorProductoBoton_prod = valorOnClickButton.substring(start_pos_prod,end_pos_prod);
-
                     boton.setAttribute('onclick', 'eliminarProducto(\'' + identificadorProductoBoton_prod + ',' + (num-1) + '\');');
-                    boton.id = 'idBotonEliminar-' + (num-1);
+
                 }
             }
         });
