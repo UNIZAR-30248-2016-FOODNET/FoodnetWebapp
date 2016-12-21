@@ -109,6 +109,9 @@ public class ControladorGestionarProductos {
                                  @RequestParam("precio")String precio,
                                  @RequestParam("descripcion")String descripcion){
 
+        precio = precio.replace(",",".");
+        precio = precio.replace("€","");
+
         System.out.println("Me ha llegado peticion para insertar un nuevo producto en la bbdd: "
                             + nombre + " " + supermercado + " " + categoria + " " + precio + " " + descripcion);
 
@@ -138,15 +141,19 @@ public class ControladorGestionarProductos {
                                     @RequestParam("supermercado")String supermercado,
                                     @RequestParam("categoria")String categoria,
                                     @RequestParam("precio")String precio){
+        precio = precio.replace(",",".");
+        precio = precio.replace("€","");
 
         System.out.println("Me ha llegado peticion para actualizar el producto cuyo id es "
                 + idProducto + " con los campos : " + nombre + " " + supermercado + " " + categoria + " " + precio);
 
-        Supermercado s = repositorioSupermercado.findByNombre(supermercado);
-        Categoria c = repositorioCategoria.findByNombre(categoria);
         Producto p = repositorioProducto.findById(idProducto);
-        p.setCategoria(c);
-        p.setSupermercado(s);
+        if(!supermercado.equals("")){
+            p.setSupermercado(repositorioSupermercado.findByNombre(supermercado));
+        }
+        if(!categoria.equals("")){
+            p.setCategoria(repositorioCategoria.findByNombre(categoria));
+        }
         p.setNombre(nombre);
         p.setPrecio(Double.parseDouble(precio));
         p.setImagen("http://placehold.it/650x450&text="+nombre);

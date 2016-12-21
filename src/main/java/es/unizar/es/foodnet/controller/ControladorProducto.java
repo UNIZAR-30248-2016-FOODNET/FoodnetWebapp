@@ -1,7 +1,11 @@
 package es.unizar.es.foodnet.controller;
 
+import es.unizar.es.foodnet.model.entity.Categoria;
 import es.unizar.es.foodnet.model.entity.Producto;
+import es.unizar.es.foodnet.model.entity.Supermercado;
+import es.unizar.es.foodnet.model.repository.RepositorioCategoria;
 import es.unizar.es.foodnet.model.repository.RepositorioProducto;
+import es.unizar.es.foodnet.model.repository.RepositorioSupermercado;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,10 +23,16 @@ import java.util.List;
 public class ControladorProducto {
 
     private final RepositorioProducto repository;
+    private final RepositorioSupermercado repoSupermercado;
+    private final RepositorioCategoria repoCategoria;
 
     @Autowired
-    public ControladorProducto(RepositorioProducto repository) {
+    public ControladorProducto(RepositorioProducto repository,
+                               RepositorioSupermercado repoSupermercado,
+                               RepositorioCategoria repoCategoria) {
         this.repository = repository;
+        this.repoSupermercado = repoSupermercado;
+        this.repoCategoria = repoCategoria;
     }
 
     /**
@@ -51,7 +61,12 @@ public class ControladorProducto {
             ordenarNombreMenorMayor(listProductos);
         }
 
+        List<Supermercado> listSupermercados = repoSupermercado.findAll();
+        List<Categoria> listCategorias = repoCategoria.findAll();
+
         model.addAttribute("listaProductos", listProductos);
+        model.addAttribute("listaSupermercados", listSupermercados);
+        model.addAttribute("listaCategorias", listCategorias);
 
         return "catalogo";
     }
