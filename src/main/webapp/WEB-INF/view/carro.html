@@ -53,10 +53,10 @@
                         </td>
                         <td class="col-sm-1 col-md-1 text-center">
                             <strong th:id="${'idPrecio-' + iterStat.index}"
-                                    th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio(),0,2)+ '€'}">€4.87</strong>
+                                    th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio(),1,2)+ '€'}">€4.87</strong>
                         </td>
                         <td class="col-sm-1 col-md-1 text-center">
-                            <strong th:id="${'idSubtotal-' + iterStat.index}" th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio() * itemCarro.getCantidadProducto(),0,2)+ '€'}">€14.61</strong>
+                            <strong th:id="${'idSubtotal-' + iterStat.index}" th:text="${#numbers.formatDecimal(itemCarro.getProducto().getPrecio() * itemCarro.getCantidadProducto(),1,2)+ '€'}">€14.61</strong>
                         </td>
                         <td class="col-sm-1 col-md-1">
                             <button th:id="${'idBotonEliminarCarro-' + iterStat.index}" type="button" class="btn btn-danger"
@@ -73,7 +73,7 @@
                         <td><h5>Subtotal</h5></td>
                         <td class="text-right">
                             <h5 th:if="${session.subtotal!=null}">
-                                <strong th:id="idSubtotal" th:text="${#numbers.formatDecimal(session.subtotal,0,2) + '€'}">€24.59</strong>
+                                <strong th:id="idSubtotal" th:text="${#numbers.formatDecimal(session.subtotal,1,2) + '€'}">€24.59</strong>
                             </h5>
                         </td>
                     </tr>
@@ -82,7 +82,7 @@
                         <td>   </td>
                         <td>   </td>
                         <td><h5>Otros costes</h5></td>
-                        <td class="text-right"><h5><strong th:text="${#numbers.formatDecimal(6.9,0,2) + '€'}">€6.90</strong></h5></td>
+                        <td class="text-right"><h5><strong th:text="${#numbers.formatDecimal(6.9,1,2) + '€'}">€6.90</strong></h5></td>
                     </tr>
                     <tr>
                         <td>   </td>
@@ -91,7 +91,7 @@
                         <td><h3>Total</h3></td>
                         <td class="text-right">
                             <h3 th:if="${session.subtotal!=null}">
-                                <strong th:id="idTotal" th:text="${#numbers.formatDecimal(session.subtotal + 6.9,0,2) + '€'}">€31.53</strong>
+                                <strong th:id="idTotal" th:text="${#numbers.formatDecimal(session.subtotal + 6.9,1,2) + '€'}">€31.53</strong>
                             </h3>
                         </td>
                     </tr>
