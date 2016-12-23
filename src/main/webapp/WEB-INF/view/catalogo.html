@@ -25,7 +25,7 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-lg-3 col-sm-3 col-md-3">
+            <div class="col-lg-3 col-sm-4 col-md-3">
                 <div class="row">
                     <div class="col-lg-12">
                         <nav class="navbar navbar-default navbar-fixed-side">
@@ -83,9 +83,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-9 col-sm-9 col-md-9">
+            <div class="col-lg-9 col-sm-8 col-md-9">
                 <div class="row">
-                    <div class="col-lg-10" style="padding-bottom: 20px">
+                    <div class="col-lg-12" style="padding-bottom: 20px">
                         <div class="input-group">
                             <div class="input-group-btn">
                                 <button type="button" class="btn btn-primary">Ordenar por:</button>
@@ -103,12 +103,11 @@
                             </div>
                             <input type="text" class="form-control" placeholder="Producto a buscar..."
                                    id="idTextoProducto" name="textoBusqueda">
-                            <!--th:onkeyup="'javascript:busquedaDinamica();'-->
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-10">
+                    <div class="col-lg-12">
                         <div id="idProductosCatalogo">
 
                             <div th:id="${producto.getNombre() + '-' + iterStat}" style= "padding-right: 0.2cm;"
@@ -127,18 +126,18 @@
                                             <h4 th:text="${producto.getDescripcion()}" class="descripcion" hidden>Descripción del producto</h4>
                                             <h4 th:text="${producto.getSupermercado().getNombre()}" class="supermercado" hidden>Descripción del producto</h4>
                                             <h4 class="precio">
-                                                <label th:text="${#numbers.formatDecimal(producto.getPrecio(),0,2) + '€'}">€123.45</label>
+                                                <label th:text="${#numbers.formatDecimal(producto.getPrecio(),1,2) + '€'}">€123.45</label>
                                             </h4>
                                         </div>
                                     </div>
-                                    <button class="btn btn-success btn-product">
-                                        <a href="#" th:onclick="'javascript:aumentar(\'' + ${producto.getNombre()} +
-                                             ',' + ${producto.getPrecio()} + ',' + ${producto.getImagen()} + ',' + ${producto.getId()} + '\');'"
+                                    <boton>
+                                        <a class="btn btn-success btn-product" href="#" th:onclick="'javascript:aumentar(\'' + ${producto.getNombre()} +
+                                        ',' + ${producto.getPrecio()} + ',' + ${producto.getImagen()} + ',' + ${producto.getId()} + '\');'"
                                         style="color: white">
-                                            <span class="glyphicon glyphicon-shopping-cart"></span>
-                                            Añadir al carro
+                                        <span class="glyphicon glyphicon-shopping-cart"></span>
+                                        Añadir al carro
                                         </a>
-                                    </button>
+                                    </boton>
                                     <p></p>
                                 </div>
                             </div>
@@ -230,7 +229,7 @@
                         // Si coincide algun filtro marcado con los parametros del
                         // producto, se pone a true, para de realizar el bucle y
                         // lo deja listro para ocultarlo de la lista de productos
-                        if ($.inArray(currentFilterValue, filterValues) != -1) {
+                        if (filterValues.indexOf(currentFilterValue) >= 0) {
                             matchedCheckbox = true;
                         }
                     });
