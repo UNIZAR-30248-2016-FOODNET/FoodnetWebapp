@@ -93,4 +93,21 @@ public class ControladorCarroFavorito {
     }
 
 
+    /**
+     * Borra un carro favorito existente en el sistema
+     */
+    @RequestMapping(value = "/borrarCarroFavorito", method = RequestMethod.POST)
+    public void borrarCarroFavorito(HttpServletRequest request,@RequestParam("id") String nombreCarroFavorito){
+        System.out.println("Me ha llegado peticion para borrar el carro favorito cuyo nombre es " + nombreCarroFavorito);
+
+        Usuario user = (Usuario) request.getSession().getAttribute("user");
+        if(user != null){
+            CarroFavorito cf = repository.findByNombre(nombreCarroFavorito);
+            if(cf.getUsuario().getEmail().equals(user.getEmail())){
+                repository.delete(cf);
+            }
+        }
+    }
+
+
 }
