@@ -70,6 +70,12 @@ public class CarroFavoritoTest {
 
         carroProductos = new ArrayList<>();
         carroProductos.add(new ProductoCarro(repositorioProducto.findByNombre("Yogurt"), 1));
+
+        Usuario user2 = new Usuario("test2", "pedidos", "test2Pedidos@gmail.com", "pedidos", "zaragoza");
+        cu.registrarUsuario(user2, Mockito.mock(RedirectAttributes.class));
+
+        CarroFavorito cf = new CarroFavorito("Carro",user2,carroProductos);
+        repositorioCarroFavorito.save(cf);
     }
 
     @After
@@ -161,4 +167,39 @@ public class CarroFavoritoTest {
         ccf.cargarFavoritos(model, request);
         assertEquals(favoritosInicial + 1, ((List<CarroFavorito>) model.get("carrosFavoritos")).size());
     }
+
+    /**
+     * Test que elimina un carroFavorito y comprueba que el número de carros favoritos del
+     * del usuario ha disminuido.
+     */
+    @Test
+    public void eliminarFavoritosTest() {
+        CarroFavorito cf = repositorioCarroFavorito.findByNombre("Carro");
+        assertNotNull(cf);
+        int favoritosInicial = repositorioCarroFavorito.findAll().size();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession().setAttribute("user", cf.getUsuario());
+        ccf.borrarCarroFavorito(request,cf.getNombre());
+        assertEquals(favoritosInicial, repositorioCarroFavorito.findAll().size() + 1);
+    }
+
+
+    /**
+     * Test que elimina un carroFavorito desde un usuario al que no le pertenece y comprueba que el número de carros favoritos del
+     * del usuario no ha disminuido.
+     */
+    @Test
+    public void eliminarFavoritosOtroUsuarioTest() {
+        CarroFavorito cf = repositorioCarroFavorito.findByNombre("Carro");
+        assertNotNull(cf);
+        int favoritosInicial = repositorioCarroFavorito.findAll().size();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Usuario usuario = repositorioUsuario.findByEmail("testPedidos@gmail.com");
+        assertNotNull(usuario);
+        request.getSession().setAttribute("user", usuario);
+        ccf.borrarCarroFavorito(request,cf.getNombre());
+        assertEquals(favoritosInicial, repositorioCarroFavorito.findAll().size());
+    }
+
+
 }
