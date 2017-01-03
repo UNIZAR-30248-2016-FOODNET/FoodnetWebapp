@@ -109,5 +109,80 @@ public class ControladorCarroFavorito {
         }
     }
 
+    /**
+     * Mapeo para agregar los productos de un carro favorito al carro actual
+     * @param nombre nombre del carro favorito a agregar
+     */
+    @RequestMapping(value="/addFavoritoCarro", method = RequestMethod.POST)
+    public void addFavoritoACarro(@RequestParam("name") String nombre,
+                                       HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("Petición para agregar carro favorito a carrito actual.");
 
+        try {
+            PrintWriter out = response.getWriter();
+            CarroFavorito carroFavorito = repository.findByNombre(nombre);
+            ArrayList<ProductoCarro> carroF = (ArrayList<ProductoCarro>) carroFavorito.getProductos();
+            ArrayList<ProductoCarro> carroSesion = (ArrayList<ProductoCarro>) request.getSession().getAttribute("carroProductos");
+
+            if(carroSesion != null) {
+                System.out.println("Carro existe, add");
+                for(ProductoCarro productoCarro : carroF) {
+                    boolean repe = false;
+                    for(ProductoCarro productoCarroS : carroSesion) {
+                        //Si el producto a añadir ya se encuentra en el carrito de la sesión, añade la cantidad
+                        if(productoCarro.getProducto().getId().equals(productoCarroS.getProducto().getId())) {
+                            productoCarroS.setCantidadProducto(productoCarroS.getCantidadProducto()
+                                    + productoCarro.getCantidadProducto());
+                            repe = true;
+                        }
+                    }
+                    if (!repe) {
+                        carroSesion.add(productoCarro);
+                    }
+                }
+                int numProductos = numProductosCarro(carroSesion);
+                request.getSession().setAttribute("carroProductos", carroSesion);
+                request.getSession().setAttribute("productosCarro", numProductos);
+                request.getSession().setAttribute("subtotal", actualizarSubtotal(carroSesion));
+                //Especificar valor devuelto por el out según codigo JS
+                out.print("existe, " + numProductos);
+            } else {
+                System.out.println("Carro no existe, creandolo");
+                int numProductos = numProductosCarro(carroF);
+                request.getSession().setAttribute("carroProductos", carroF);
+                request.getSession().setAttribute("productosCarro", numProductos);
+                request.getSession().setAttribute("subtotal", actualizarSubtotal(carroF));
+                //Especificar valor devuelto por el out según código JS
+                out.print("nuevo, " + numProductos);
+            }
+        } catch (IOException e) {
+            System.err.println("Error al obtener la salida hacia el cliente");
+        }
+    }
+
+    /**
+     * Devuelve el total de la compra contenida en carroCompra
+     * @param carroCompra carro de la compra
+     * @return total de la compra
+     */
+    private double actualizarSubtotal(ArrayList<ProductoCarro> carroCompra){
+        double cuentaIntermedia = 0.0;
+        for(ProductoCarro p : carroCompra){
+            cuentaIntermedia = cuentaIntermedia + (((double) p.getCantidadProducto()) * p.getProducto().getPrecio());
+        }
+        return cuentaIntermedia;
+    }
+
+    /**
+     * Devuelve el numero de productos en el carro
+     * @param carro carro de la compra
+     * @return numero de productos en el carro
+     */
+    private int numProductosCarro(ArrayList<ProductoCarro> carro){
+        int cuenta = 0;
+        for(ProductoCarro pc: carro){
+            cuenta+=pc.getCantidadProducto();
+        }
+        return cuenta;
+    }
 }

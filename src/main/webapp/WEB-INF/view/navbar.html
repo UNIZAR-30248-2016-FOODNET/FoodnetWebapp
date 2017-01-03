@@ -192,6 +192,21 @@
         });
     }
 
+    function addAllCarro(nombreFavorito){
+        $.post("/addFavoritoCarro", {name:nombreFavorito}, function(result){
+            var respuesta = result.split(",");
+            var operacion = respuesta[0].trim();
+
+            var textBox = document.getElementById("numItems");
+            var numProductos = parseInt(respuesta[1].trim());
+            textBox.innerHTML = numProductos;
+
+            //Según si el carro ya ha sido creado (codigo operacion) se reemplaza o se crea
+
+
+        });
+    }
+
     function eliminarProducto(productoSinParsear){
         //parte navbar
         var producto = productoSinParsear.split(",");

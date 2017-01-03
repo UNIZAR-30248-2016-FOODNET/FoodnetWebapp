@@ -29,6 +29,13 @@
                                     </a>
                                 </h4>
                             </div>
+                            <div class="col-sm-6 col-md-6" style="display: inline-block; text-align: right;">
+                                <a class="btn btn-success btn-product" href="#" th:onclick="'javascript:addAllCarro(\'' + ${carroF.getNombre()} + '\');'"
+                                        style="color: white">
+                                   <span class="glyphicon glyphicon-shopping-cart"></span>
+                                   Añadir carro favorito al carrito
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div th:id="${carroF.getNombre()}" class="panel-collapse collapse">
