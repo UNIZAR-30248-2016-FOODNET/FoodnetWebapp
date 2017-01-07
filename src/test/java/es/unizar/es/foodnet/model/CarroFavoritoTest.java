@@ -160,6 +160,7 @@ public class CarroFavoritoTest {
         ccf.cargarFavoritos(model, request);
         int favoritosInicial = ((List<CarroFavorito>) model.get("carrosFavoritos")).size();
 
+
         request.getSession().setAttribute("carroProductos", carroProductos);
 
         ccf.anadirCarroFavorito("NombreCarro", request, new MockHttpServletResponse());
@@ -178,8 +179,9 @@ public class CarroFavoritoTest {
         assertNotNull(cf);
         int favoritosInicial = repositorioCarroFavorito.findAll().size();
         MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
         request.getSession().setAttribute("user", cf.getUsuario());
-        ccf.borrarCarroFavorito(request,cf.getNombre());
+        ccf.borrarCarroFavorito(response,request,cf.getNombre());
         assertEquals(favoritosInicial, repositorioCarroFavorito.findAll().size() + 1);
     }
 
@@ -194,10 +196,11 @@ public class CarroFavoritoTest {
         assertNotNull(cf);
         int favoritosInicial = repositorioCarroFavorito.findAll().size();
         MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
         Usuario usuario = repositorioUsuario.findByEmail("testPedidos@gmail.com");
         assertNotNull(usuario);
         request.getSession().setAttribute("user", usuario);
-        ccf.borrarCarroFavorito(request,cf.getNombre());
+        ccf.borrarCarroFavorito(response,request,cf.getNombre());
         assertEquals(favoritosInicial, repositorioCarroFavorito.findAll().size());
     }
 
