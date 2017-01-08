@@ -6,6 +6,7 @@
     <meta charset="UTF-8"/>
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../../resources/css/jquery.dataTables.min.css" th:href="@{/resources/css/jquery.dataTables.min.css}" />
     <title th:text="#{carroF.pagina.titulo}">Carros favoritos</title>
 </head>
 
@@ -22,19 +23,23 @@
                 <div class="panel panel-default" th:each="carroF : ${carrosFavoritos}">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-sm-6 col-md-6" style="display: inline-block; text-align: left;">
+                            <div class="col-sm-8 col-md-8" style="display: inline-block; text-align: left;">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" th:href="'#' + ${carroF.getNombre()}" th:text="${carroF.getNombre()}">
+                                    <a class="nombre" data-toggle="collapse" data-parent="#accordion" th:href="'#' + ${carroF.getNombre()}" th:text="${carroF.getNombre()}">
                                         Carro
                                     </a>
                                 </h4>
                             </div>
-                            <div class="col-sm-6 col-md-6" style="display: inline-block; text-align: right;">
+                            <div class="col-sm-2 col-md-2" style="display: inline-block; text-align: right;">
                                 <a class="btn btn-success btn-product" href="#" th:onclick="'javascript:addAllCarro(\'' + ${carroF.getNombre()} + '\');'"
                                         style="color: white">
                                    <span class="glyphicon glyphicon-shopping-cart"></span>
                                    Añadir carro favorito al carrito
                                 </a>
+                            </div>
+                            <div class="col-sm-2 col-md-2" style="display: inline-block; text-align: right;">
+                                <button class="btn btn-danger delete"><span class="glyphicon glyphicon-remove"></span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -83,5 +88,19 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $(function() {
+                $('.delete').bind( "click", function(event) {
+                    var idProd =  $(this).parent().parent().parent().find(".nombre").html();
+
+                    $.post("/borrarCarroFavorito", {nombre: idProd});
+                    $(this).parent().parent().parent().parent().remove();
+
+                });
+            });
+        });
+
+    </script>
 
 </body>
