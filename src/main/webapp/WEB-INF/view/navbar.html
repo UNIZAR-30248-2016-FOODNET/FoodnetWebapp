@@ -194,15 +194,49 @@
 
     function addAllCarro(nombreFavorito){
         $.post("/addFavoritoCarro", {name:nombreFavorito}, function(result){
-            var respuesta = result.split(",");
-            var operacion = respuesta[0].trim();
+            var listaProductosString = JSON.stringify(result);
+            var array = JSON.parse(listaProductosString);
+            var numProductos = 0;
 
+            //clonamos el boton de ver carro
+            var lista = document.getElementById('carroCompra'), verCarro = lista.lastElementChild;
+            var clonVer = verCarro.cloneNode(true);
+            var list = document.getElementById('carroCompra'), item = list.lastElementChild;
+            list.removeChild(item);
+
+            //clonamos el divider
+            var lista2 = document.getElementById('carroCompra'), divider = lista2.lastElementChild;
+            var clonDivider = divider.cloneNode(true);
+            var list2 = document.getElementById('carroCompra'), item2 = list2.lastElementChild;
+            list2.removeChild(item2);
+
+            for(var i = 0; i < array.length; i++) {
+                var productoEliminar = document.getElementById("idProducto-"+i);
+                if(productoEliminar != null)
+                    productoEliminar.remove();
+
+                var nombre = array[i].producto.nombre;
+                var precio = array[i].producto.precio;
+                var imagen = array[i].producto.imagen;
+                var id = array[i].producto.id;
+                var cantidadProducto = array[i].cantidadProducto;
+
+                $('#carroCompra').append('<li id="idProducto-' + i + '"><span class="item"><span class="item-left">' +
+                    '<img src="' + imagen + '" width="50" height="50" alt="" />' +
+                    '<span class="item-info"> ' +
+                    '<span>' + nombre + '</span> ' +
+                    '<span id="idCantidadProductos-' + i + '">' + cantidadProducto + 'ud x ' + parseFloat(precio).toFixed(2).replace(".", ",") + '€/ud</span></span>' +
+                    '</span>' +
+                    '<span class="item-right"> ' +
+                    '<button id="idBotonEliminar-' + i + '" class="btn btn-xs btn-danger pull-right" ' +
+                    'onclick="eliminarProducto(\'' + id + ',' + i + '\');">x</button></span></span></li>');
+
+                numProductos = numProductos + cantidadProducto;
+            }
             var textBox = document.getElementById("numItems");
-            var numProductos = parseInt(respuesta[1].trim());
             textBox.innerHTML = numProductos;
-
-            //Según si el carro ya ha sido creado (codigo operacion) se reemplaza o se crea
-
+            document.getElementById("carroCompra").appendChild(clonDivider);
+            document.getElementById("carroCompra").appendChild(clonVer);
 
         });
     }
