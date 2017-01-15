@@ -4,7 +4,6 @@ import es.unizar.es.foodnet.model.entity.CarroFavorito;
 import es.unizar.es.foodnet.model.entity.Usuario;
 import es.unizar.es.foodnet.model.repository.RepositorioCarroFavorito;
 import es.unizar.es.foodnet.model.service.ProductoCarro;
-import org.codehaus.groovy.runtime.powerassert.SourceText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,6 +51,7 @@ public class ControladorCarroFavorito {
         try{
             PrintWriter out;
             out = response.getWriter();
+            nombreFavorito = nombreFavorito.replaceAll(" ", "_");
 
             if (repository.findByNombre(nombreFavorito) == null) {
                 repository.save(new CarroFavorito(nombreFavorito, usuario, carroSesion));
@@ -82,11 +82,9 @@ public class ControladorCarroFavorito {
         List<CarroFavorito> listaFavoritos = repository.findAll();
         List<CarroFavorito> carrosFavoritos = new ArrayList<>();
         Usuario u =(Usuario)request.getSession().getAttribute("user");
-        System.out.println("hola1");
+
         for(CarroFavorito c :listaFavoritos){
-            System.out.println("hola1");
             if (c.getUsuario().getEmail().equals(u.getEmail())){
-                System.out.println("hola1");
                 carrosFavoritos.add(c);
             }
         }
