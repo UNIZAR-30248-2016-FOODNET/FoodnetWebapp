@@ -21,9 +21,9 @@ public class SeleniumTest {
             System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 //        } else if(os.contains("ios")) {
 //            System.setProperty("webdriver.chrome.driver", "chromedriverM");
-        } else {
-            System.setProperty("webdriver.chrome.driver", "chromedriver");
-        }
+        } //else {
+//            System.setProperty("webdriver.chrome.driver", "chromedriver");
+//        }
 
         browser = new ChromeDriver();
     }
