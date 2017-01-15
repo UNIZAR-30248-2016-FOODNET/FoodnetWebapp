@@ -19,8 +19,8 @@ public class SeleniumTest {
         String os = System.getProperty("os.name").toLowerCase();
         if(os.contains("windows")) {
             System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
-        } else if(os.contains("ios")) {
-            System.setProperty("webdriver.chrome.driver", "chromedriverM");
+//        } else if(os.contains("ios")) {
+//            System.setProperty("webdriver.chrome.driver", "chromedriverM");
         } else {
             System.setProperty("webdriver.chrome.driver", "chromedriver");
         }
