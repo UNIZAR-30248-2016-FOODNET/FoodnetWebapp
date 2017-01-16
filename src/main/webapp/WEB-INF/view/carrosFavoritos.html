@@ -23,14 +23,14 @@
                 <div class="panel panel-default" th:each="carroF : ${carrosFavoritos}">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-sm-8 col-md-8" style="display: inline-block; text-align: left;">
+                            <div class="col-sm-6 col-md-6" style="display: inline-block; text-align: left;">
                                 <h4 class="panel-title">
-                                    <a class="nombre" data-toggle="collapse" data-parent="#accordion" th:href="'#' + ${carroF.getNombre()}" th:text="${carroF.getNombre()}">
+                                    <a class="nombre" data-toggle="collapse" data-parent="#accordion" th:href="'#' + ${carroF.getNombre()}" th:text="${carroF.getNombre().replace('_', ' ')}">
                                         Carro
                                     </a>
                                 </h4>
                             </div>
-                            <div class="col-sm-2 col-md-2" style="display: inline-block; text-align: right;">
+                            <div class="col-sm-4 col-md-4" style="display: inline-block; text-align: right;">
                                 <a class="btn btn-success btn-product" href="#" th:onclick="'javascript:addAllCarro(\'' + ${carroF.getNombre()} + '\');'"
                                         style="color: white">
                                    <span class="glyphicon glyphicon-shopping-cart"></span>
